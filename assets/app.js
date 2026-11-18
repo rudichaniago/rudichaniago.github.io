@@ -12,9 +12,12 @@ const CONFIG = {
   focusTopics: ["vokasi", "budaya", "tefa"],
   // Repositori koleksi: setiap file .html di dalamnya tampil sebagai kartu karya tersendiri.
   // Tambahkan file HTML baru ke repositori ini, kartunya muncul otomatis.
+  // Thumbnail otomatis: unggah gambar bernama sama (mis. "Nama Karya.jpg" untuk "Nama Karya.html").
+  // Format: .jpg/.jpeg/.png/.webp, ukuran ideal 1200×630 px.
   collections: ["karya"],
   // Judul & deskripsi kustom (opsional), menimpa data dari GitHub.
   // Untuk karya di repositori koleksi, kuncinya "namarepo/nama file.html".
+  // Tambahkan image: "https://..." untuk memasang thumbnail manual pada kartu mana pun.
   overrides: {
     "karya/Mengenal Ka Ga Nga.html": {
       title: "Mengenal Ka Ga Nga",
@@ -29,7 +32,8 @@ const CONFIG = {
   fallback: [
     { name: "karya/Mengenal Ka Ga Nga.html", label: "Mengenal Ka Ga Nga", collection: "karya", description: null, language: "HTML",
       html_url: "https://github.com/rudichaniago/karya/blob/main/Mengenal%20Ka%20Ga%20Nga.html",
-      homepage: "https://rudichaniago.github.io/karya/Mengenal%20Ka%20Ga%20Nga.html", has_pages: false, topics: [], fork: false,
+      homepage: "https://rudichaniago.github.io/karya/Mengenal%20Ka%20Ga%20Nga.html", has_pages: false,
+      image: "https://rudichaniago.github.io/karya/Mengenal%20Ka%20Ga%20Nga.jpg", topics: [], fork: false,
       stargazers_count: 0, forks_count: 0, pushed_at: "2026-11-18T08:26:38Z", created_at: "2026-11-18T08:19:48Z" }
   ],
   cacheMinutes: 30
@@ -56,7 +60,7 @@ function relTime(iso) {
   return `${Math.floor(d / 365)} tahun lalu`;
 }
 
-const CACHE_KEY = "bad-repos-v2";
+const CACHE_KEY = "bad-repos-v3";
 function cacheGet() {
   try {
     const raw = localStorage.getItem(CACHE_KEY);
@@ -94,7 +98,12 @@ async function expandCollection(r) {
       headers: { Accept: "application/vnd.github+json" }
     });
     if (!res.ok) return [r];
-    const files = (await res.json()).filter((f) => f.type === "file" && /\.html?$/i.test(f.name) && !/^(index|404)\.html?$/i.test(f.name));
+    const all = await res.json();
+    const pagesUrl = (f) => `https://${CONFIG.username}.github.io/${r.name}/${f.path.split("/").map(encodeURIComponent).join("/")}`;
+    const images = {};
+    all.filter((f) => f.type === "file" && /\.(jpe?g|png|webp)$/i.test(f.name))
+      .forEach((f) => { images[f.name.replace(/\.[^.]+$/, "").toLowerCase()] = r.has_pages ? pagesUrl(f) : f.download_url; });
+    const files = all.filter((f) => f.type === "file" && /\.html?$/i.test(f.name) && !/^(index|404)\.html?$/i.test(f.name));
     if (!files.length) return [r];
     return files.map((f) => ({
       ...r,
@@ -104,7 +113,8 @@ async function expandCollection(r) {
       description: null,
       language: "HTML",
       html_url: f.html_url,
-      homepage: r.has_pages ? `https://${CONFIG.username}.github.io/${r.name}/${f.path.split("/").map(encodeURIComponent).join("/")}` : null,
+      homepage: r.has_pages ? pagesUrl(f) : null,
+      image: images[f.name.replace(/\.html?$/i, "").toLowerCase()] || null,
       has_pages: false
     }));
   } catch { return [r]; }
@@ -120,6 +130,7 @@ function normalize(list) {
         ...r,
         title: o.title || (r.label ? r.label : prettify(r.name)),
         desc: o.description || r.description || "",
+        image: o.image || r.image || null,
         topics: [...new Set([...(r.topics || []), ...(o.topics || [])].map((t) => t.toLowerCase()))],
         html_url: r.html_url || `https://github.com/${CONFIG.username}/${r.name}`,
         live,
@@ -152,6 +163,10 @@ function card(r) {
   const badge = r.live ? `<span class="badge badge--live">Live</span>` : r.featured ? `<span class="badge">Unggulan</span>` : r.archived ? `<span class="badge">Arsip</span>` : "";
   return `
   <article class="card">
+    <div class="card__thumb" aria-hidden="true">
+      <span>${esc(r.title)}</span>
+      ${r.image ? `<img src="${esc(r.image)}" alt="" loading="lazy" decoding="async" onerror="this.remove()">` : ""}
+    </div>
     ${r.collection ? `<p class="card__kicker">Koleksi ${esc(prettify(r.collection))}</p>` : ""}
     <div class="card__top">
       <h3><a href="${esc(r.live || r.html_url)}" target="_blank" rel="noopener">${esc(r.title)}</a></h3>
