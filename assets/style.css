@@ -110,6 +110,7 @@ h1, h2, h3 { font-family: "Fraunces", Georgia, serif; line-height: 1.15; margin:
 }
 .card:hover { transform: translateY(-3px); border-color: var(--gold); }
 .card::before { content: ""; position: absolute; left: 24px; right: 24px; top: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--gold)); border-radius: 0 0 3px 3px; }
+.card__kicker { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin: 0 0 -4px; }
 .card__top { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
 .card h3 { font-size: 21px; word-break: break-word; }
 .card h3 a { text-decoration: none; }

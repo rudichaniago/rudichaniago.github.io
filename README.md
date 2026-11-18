@@ -11,6 +11,7 @@ Landing page etalase karya digital Rudi Nofindra. Daftar repositori dimuat otoma
 - `exclude` — repositori yang disembunyikan
 - `featured` — repositori unggulan (tampil paling depan)
 - `overrides` — judul/deskripsi kustom per repositori
+- `collections` — repositori koleksi (mis. `karya`): setiap file `.html` di dalamnya tampil sebagai kartu karya sendiri, lengkap dengan tautan langsung ke halamannya. Kunci `overrides`-nya: `"karya/Nama File.html"`.
 - `fallback` — data cadangan jika GitHub API tidak dapat diakses
 
 Tips: isi **Description**, **Topics**, dan **Website** di setiap repositori GitHub agar kartunya lebih informatif. Repositori dengan GitHub Pages aktif otomatis mendapat tombol "Buka situs".
