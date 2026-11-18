@@ -45,8 +45,7 @@ const CONFIG = {
       homepage: "https://rudichaniago.github.io/karya/Mengenal%20Ka%20Ga%20Nga.html", has_pages: false,
       image: "https://rudichaniago.github.io/karya/Mengenal%20Ka%20Ga%20Nga.jpg", topics: [], fork: false,
       stargazers_count: 0, forks_count: 0, pushed_at: "2026-11-18T08:26:38Z", created_at: "2026-11-18T08:19:48Z" }
-  ],
-  cacheMinutes: 30
+  ]
 };
 
 const LANG_COLORS = {
@@ -76,16 +75,15 @@ function cacheGet() {
     const raw = localStorage.getItem(CACHE_KEY);
     if (!raw) return null;
     const { t, data } = JSON.parse(raw);
-    return Date.now() - t < CONFIG.cacheMinutes * 60000 ? data : null;
+    return Array.isArray(data) ? { t, data } : null;
   } catch { return null; }
 }
 function cacheSet(data) {
   try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), data })); } catch {}
 }
 
-async function loadRepos() {
-  const cached = cacheGet();
-  if (cached) return { data: cached, source: "cache" };
+// Selalu ambil data terbaru dari GitHub; salinan di browser hanya dipakai agar halaman tampil seketika.
+async function fetchRepos() {
   const res = await fetch(`https://api.github.com/users/${CONFIG.username}/repos?per_page=100&sort=pushed`, {
     headers: { Accept: "application/vnd.github+json" }
   });
@@ -97,7 +95,7 @@ async function loadRepos() {
   }));
   const expanded = (await Promise.all(data.map(expandCollection))).flat();
   cacheSet(expanded);
-  return { data: expanded, source: "api" };
+  return expanded;
 }
 
 // Ubah repositori koleksi menjadi satu entri per file .html; bila gagal, repositori tetap tampil apa adanya.
@@ -138,7 +136,7 @@ function normalize(list) {
       const live = r.homepage || (r.has_pages ? `https://${CONFIG.username}.github.io/${r.name}/` : null);
       return {
         ...r,
-        title: o.title || (r.label ? r.label : prettify(r.name)),
+        title: o.title || prettify(r.label || r.name),
         desc: o.description || r.description || "",
         image: o.image || r.image || null,
         topics: [...new Set([...(r.topics || []), ...(o.topics || [])].map((t) => t.toLowerCase()))],
@@ -231,22 +229,32 @@ function bind() {
 async function init() {
   $("#year").textContent = new Date().getFullYear();
   bind();
-  let raw;
+  const cached = cacheGet();
+  if (cached) render(cached.data);
   try {
-    raw = (await loadRepos()).data;
+    render(await fetchRepos());
+    $("#note").hidden = true;
   } catch (err) {
-    raw = CONFIG.fallback;
+    if (cached) return; // tetap tampilkan salinan terakhir
+    render(CONFIG.fallback);
     const note = $("#note");
     note.hidden = false;
     note.textContent = "Data langsung dari GitHub sedang tidak tersedia; menampilkan data cadangan.";
   }
+}
+
+function render(raw) {
   state.repos = normalize(raw);
+  if (!["Semua", "Situs Aktif"].includes(state.filter) && !state.repos.some((r) =>
+    state.filter.startsWith("#") ? r.topics.includes(state.filter.slice(1)) : (r.language || "Lainnya") === state.filter)) {
+    state.filter = "Semua";
+  }
   renderStats(state.repos);
   renderFilters(state.repos);
   renderGrid();
-  if (!state.repos.length) {
-    $("#empty").textContent = "Karya sedang disiapkan — repositori baru akan tampil otomatis di sini.";
-  }
+  $("#empty").textContent = state.repos.length
+    ? "Tidak ada karya yang cocok dengan pencarian."
+    : "Karya sedang disiapkan — repositori baru akan tampil otomatis di sini.";
 }
 
 init();
