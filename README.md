@@ -13,6 +13,18 @@ Landing page etalase karya digital Rudi Nofindra. Daftar repositori dimuat otoma
 - `overrides` — judul/deskripsi kustom per repositori
 - `collections` — repositori koleksi (mis. `karya`): setiap file `.html` di dalamnya tampil sebagai kartu karya sendiri, lengkap dengan tautan langsung ke halamannya. Kunci `overrides`-nya: `"karya/Nama File.html"`.
 
+## Deskripsi & tag otomatis
+Landing page membaca bagian `<head>` setiap file aplikasi di repositori koleksi:
+
+```html
+<title>Nama Aplikasi</title>
+<meta name="description" content="Deskripsi singkat 1–2 kalimat.">
+<meta name="keywords" content="vokasi, budaya, tefa">
+<meta property="og:image" content="https://rudichaniago.github.io/karya/nama-aplikasi.jpg">
+```
+
+Letakkan tag ini di bagian paling atas `<head>` (sebelum `<style>`/`<script>`). Bila `keywords` kosong, tag dipasang otomatis dari kata kunci pada judul/deskripsi (`CONFIG.autoTags`). `overrides` tetap bisa dipakai untuk menimpa.
+
 ## Thumbnail kartu
 - **Otomatis (repositori koleksi):** unggah gambar dengan nama sama seperti aplikasinya, mis. `Mengenal Ka Ga Nga.jpg` untuk `Mengenal Ka Ga Nga.html`. Format `.jpg`/`.png`/`.webp`, ukuran ideal **1200×630 px**, usahakan < 300 KB.
 - **Manual (kartu mana pun):** tambahkan `image: "https://..."` di `overrides`.

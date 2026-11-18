@@ -14,36 +14,36 @@ const CONFIG = {
   // Tambahkan file HTML baru ke repositori ini, kartunya muncul otomatis.
   // Thumbnail otomatis: unggah gambar bernama sama (mis. "Nama Karya.jpg" untuk "Nama Karya.html").
   // Format: .jpg/.jpeg/.png/.webp, ukuran ideal 1200×630 px.
+  // Judul, deskripsi, tag, dan gambar dibaca otomatis dari <head> tiap file aplikasi:
+  //   <title>, <meta name="description">, <meta name="keywords">, <meta property="og:image">
   collections: ["karya"],
-  // Judul & deskripsi kustom (opsional), menimpa data dari GitHub.
+  // Tag otomatis bila karya belum punya tag sama sekali: tag dipasang jika judul/deskripsi memuat kata kuncinya.
+  autoTags: {
+    vokasi: /\b(smk|vokasi|kejuruan|kompetensi keahlian|broadcasting|perfilman|praktik)\b/i,
+    budaya: /(budaya|aksara|tradisi|adat|warisan|kesenian|tradisional|leluhur)/i,
+    tefa: /\b(tefa|teaching factory)\b/i
+  },
+  // Judul & deskripsi kustom (opsional), menimpa data otomatis. Tidak wajib diisi.
   // Untuk karya di repositori koleksi, kuncinya "namarepo/nama file.html".
   // Tambahkan image: "https://..." untuk memasang thumbnail manual pada kartu mana pun.
   overrides: {
-    "karya/lab-maya-simuset-studio.html": {
-      title: "Lab Maya · SimuSet Studio",
-      description: "Simulator set property, kamera, dan lighting studio untuk SMK Broadcasting & Perfilman: rancang set, atur kamera, bentuk cahaya, challenge praktik, K3LH, serta daftar alat & biaya sewa.",
-      topics: ["vokasi", "broadcasting", "simulator"]
-    },
-    "karya/Mengenal Ka Ga Nga.html": {
-      title: "Mengenal Ka Ga Nga",
-      description: "Media pembelajaran interaktif aksara Ka Ga Nga (surat ulu) Sumatra bagian selatan: kisah, peta persebaran, kartu 27 huruf, kuis, dan alih aksara nama.",
-      topics: ["budaya", "aksara", "media-pembelajaran"]
-    },
     "pendidikanmusikunp": { title: "Pendidikan Musik UNP", description: "Bank data pendidikan musik.", topics: ["budaya"] },
     "pendidikanmusik": { title: "Pendidikan Musik", description: "Bank data pendidikan musik.", topics: ["budaya"] },
     "rudino": { title: "Rudino", description: "Media pembelajaran vokasi, seni budaya, dan Teaching Factory (TEFA).", topics: ["vokasi", "budaya", "tefa"] }
   },
   // Cadangan bila GitHub API tidak dapat diakses (batas akses tercapai, offline, dll.)
   fallback: [
-    { name: "karya/lab-maya-simuset-studio.html", label: "lab-maya-simuset-studio", collection: "karya", description: null, language: "HTML",
+    { name: "karya/lab-maya-simuset-studio.html", label: "lab-maya-simuset-studio", collection: "karya", language: "HTML",
+      title: "Lab Maya · SimuSet Studio", description: "Simulator set property, kamera, dan lighting studio untuk SMK Broadcasting & Perfilman: rancang set, atur kamera, bentuk cahaya, challenge praktik, K3LH, serta daftar alat & biaya sewa.",
       html_url: "https://github.com/rudichaniago/karya/blob/main/lab-maya-simuset-studio.html",
       homepage: "https://rudichaniago.github.io/karya/lab-maya-simuset-studio.html", has_pages: false,
-      image: "https://rudichaniago.github.io/karya/lab-maya-simuset-studio.jpg", topics: [], fork: false,
+      image: "https://rudichaniago.github.io/karya/lab-maya-simuset-studio.jpg", topics: ["vokasi", "broadcasting", "simulator"], fork: false,
       stargazers_count: 0, forks_count: 0, pushed_at: "2026-11-18T09:24:09Z", created_at: "2026-11-18T09:24:09Z" },
-    { name: "karya/Mengenal Ka Ga Nga.html", label: "Mengenal Ka Ga Nga", collection: "karya", description: null, language: "HTML",
+    { name: "karya/Mengenal Ka Ga Nga.html", label: "Mengenal Ka Ga Nga", collection: "karya", language: "HTML",
+      title: "Mengenal Ka Ga Nga", description: "Media pembelajaran interaktif aksara Ka Ga Nga (surat ulu) Sumatra bagian selatan: kisah, peta persebaran, kartu 27 huruf, kuis, dan alih aksara nama.",
       html_url: "https://github.com/rudichaniago/karya/blob/main/Mengenal%20Ka%20Ga%20Nga.html",
       homepage: "https://rudichaniago.github.io/karya/Mengenal%20Ka%20Ga%20Nga.html", has_pages: false,
-      image: "https://rudichaniago.github.io/karya/Mengenal%20Ka%20Ga%20Nga.jpg", topics: [], fork: false,
+      image: "https://rudichaniago.github.io/karya/Mengenal%20Ka%20Ga%20Nga.jpg", topics: ["budaya", "aksara", "media-pembelajaran"], fork: false,
       stargazers_count: 0, forks_count: 0, pushed_at: "2026-11-18T08:26:38Z", created_at: "2026-11-18T08:19:48Z" }
   ]
 };
@@ -69,7 +69,7 @@ function relTime(iso) {
   return `${Math.floor(d / 365)} tahun lalu`;
 }
 
-const CACHE_KEY = "bad-repos-v4";
+const CACHE_KEY = "bad-repos-v5";
 function cacheGet() {
   try {
     const raw = localStorage.getItem(CACHE_KEY);
@@ -113,19 +113,58 @@ async function expandCollection(r) {
       .forEach((f) => { images[f.name.replace(/\.[^.]+$/, "").toLowerCase()] = r.has_pages ? pagesUrl(f) : f.download_url; });
     const files = all.filter((f) => f.type === "file" && /\.html?$/i.test(f.name) && !/^(index|404)\.html?$/i.test(f.name));
     if (!files.length) return [r];
-    return files.map((f) => ({
-      ...r,
-      name: `${r.name}/${f.name}`,
-      label: f.name.replace(/\.html?$/i, ""),
-      collection: r.name,
-      description: null,
-      language: "HTML",
-      html_url: f.html_url,
-      homepage: r.has_pages ? pagesUrl(f) : null,
-      image: images[f.name.replace(/\.html?$/i, "").toLowerCase()] || null,
-      has_pages: false
+    return Promise.all(files.map(async (f) => {
+      const url = r.has_pages ? pagesUrl(f) : f.download_url;
+      const meta = await readMeta(url);
+      return {
+        ...r,
+        name: `${r.name}/${f.name}`,
+        label: f.name.replace(/\.html?$/i, ""),
+        collection: r.name,
+        title: meta.title || null,
+        description: meta.description || null,
+        topics: meta.keywords || [],
+        language: "HTML",
+        html_url: f.html_url,
+        homepage: r.has_pages ? url : null,
+        image: images[f.name.replace(/\.html?$/i, "").toLowerCase()] || meta.image || null,
+        has_pages: false
+      };
     }));
   } catch { return [r]; }
+}
+
+// Baca metadata dari awal file aplikasi saja (maks. 32 KB), tanpa mengunduh seluruh file.
+async function readMeta(url) {
+  try {
+    const res = await fetch(url);
+    if (!res.ok || !res.body) return {};
+    const reader = res.body.getReader();
+    const dec = new TextDecoder();
+    let html = "";
+    while (html.length < 32768) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      html += dec.decode(value, { stream: true });
+      if (/<\/head>/i.test(html)) break;
+    }
+    reader.cancel().catch(() => {});
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    const get = (sel) => (doc.querySelector(sel)?.getAttribute("content") || "").trim();
+    const image = get('meta[property="og:image"]');
+    return {
+      title: get('meta[property="og:title"]') || (doc.querySelector("title")?.textContent || "").trim(),
+      description: get('meta[name="description"]') || get('meta[property="og:description"]'),
+      keywords: get('meta[name="keywords"]').split(",").map((k) => k.trim().toLowerCase().replace(/\s+/g, "-")).filter(Boolean),
+      image: image ? new URL(image, url).href : ""
+    };
+  } catch { return {}; }
+}
+
+function withAutoTags(topics, title, desc) {
+  if (topics.length) return topics;
+  const text = `${title || ""} ${desc || ""}`;
+  return Object.entries(CONFIG.autoTags).filter(([, re]) => re.test(text)).map(([t]) => t);
 }
 
 function normalize(list) {
@@ -136,10 +175,10 @@ function normalize(list) {
       const live = r.homepage || (r.has_pages ? `https://${CONFIG.username}.github.io/${r.name}/` : null);
       return {
         ...r,
-        title: o.title || prettify(r.label || r.name),
+        title: o.title || r.title || prettify(r.label || r.name),
         desc: o.description || r.description || "",
         image: o.image || r.image || null,
-        topics: [...new Set([...(r.topics || []), ...(o.topics || [])].map((t) => t.toLowerCase()))],
+        topics: withAutoTags([...new Set([...(r.topics || []), ...(o.topics || [])].map((t) => t.toLowerCase()))], o.title || r.title || r.label || r.name, o.description || r.description),
         html_url: r.html_url || `https://github.com/${CONFIG.username}/${r.name}`,
         live,
         featured: CONFIG.featured.includes(r.name)
