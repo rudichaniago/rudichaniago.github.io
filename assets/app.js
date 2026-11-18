@@ -5,76 +5,126 @@ const CONFIG = {
   username: "rudichaniago",
   // Repositori yang tidak ingin ditampilkan
   exclude: ["desktop-tutorial", "bahanajardigital.github.io", "rudichaniago.github.io"],
-  // Repositori unggulan: tampil paling depan
-  featured: [],
-  // Topik fokus: tampil sebagai filter (#vokasi, #budaya, #tefa) bila dipakai minimal 1 repositori.
-  // Topik diambil dari Topics di GitHub + "topics" di overrides di bawah.
+  // Karya unggulan (tampil paling depan & bertanda ★). Contoh: "karya/lab-maya-simuset-studio.html"
+  featured: ["karya/lab-maya-simuset-studio.html", "karya/Mengenal Ka Ga Nga.html"],
+  // Topik fokus: selalu dicantumkan lebih dulu di filter topik.
   focusTopics: ["vokasi", "budaya", "tefa"],
   // Repositori koleksi: setiap file .html di dalamnya tampil sebagai kartu karya tersendiri.
-  // Tambahkan file HTML baru ke repositori ini, kartunya muncul otomatis.
-  // Thumbnail otomatis: unggah gambar bernama sama (mis. "Nama Karya.jpg" untuk "Nama Karya.html").
-  // Format: .jpg/.jpeg/.png/.webp, ukuran ideal 1200×630 px.
-  // Judul, deskripsi, tag, dan gambar dibaca otomatis dari <head> tiap file aplikasi:
-  //   <title>, <meta name="description">, <meta name="keywords">, <meta property="og:image">
+  //   Thumbnail : gambar bernama sama (mis. "nama-aplikasi.jpg"), ideal 1200×630 px.
+  //   Video demo: video bernama sama (mis. "nama-aplikasi.mp4"), ±10 detik, tanpa suara.
+  //   Judul, deskripsi, tag, kategori, mapel, kelas dibaca dari <head> tiap file aplikasi:
+  //     <title>, <meta name="description">, <meta name="keywords">,
+  //     <meta name="kategori">, <meta name="mapel">, <meta name="kelas">, <meta property="og:image">
   collections: ["karya"],
-  // Tag otomatis bila karya belum punya tag sama sekali: tag dipasang jika judul/deskripsi memuat kata kuncinya.
+  // Tag otomatis bila karya belum punya tag sama sekali.
   autoTags: {
     vokasi: /\b(smk|vokasi|kejuruan|kompetensi keahlian|broadcasting|perfilman|praktik)\b/i,
     budaya: /(budaya|aksara|tradisi|adat|warisan|kesenian|tradisional|leluhur)/i,
     tefa: /\b(tefa|teaching factory)\b/i
   },
-  // Judul & deskripsi kustom (opsional), menimpa data otomatis. Tidak wajib diisi.
-  // Untuk karya di repositori koleksi, kuncinya "namarepo/nama file.html".
-  // Tambahkan image: "https://..." untuk memasang thumbnail manual pada kartu mana pun.
-  overrides: {
-    "pendidikanmusikunp": { title: "Pendidikan Musik UNP", description: "Bank data pendidikan musik.", topics: ["budaya"] },
-    "pendidikanmusik": { title: "Pendidikan Musik", description: "Bank data pendidikan musik.", topics: ["budaya"] },
-    "rudino": { title: "Rudino", description: "Media pembelajaran vokasi, seni budaya, dan Teaching Factory (TEFA).", topics: ["vokasi", "budaya", "tefa"] }
-  },
-  // Cadangan bila GitHub API tidak dapat diakses (batas akses tercapai, offline, dll.)
+  // Kategori otomatis (urutan menentukan prioritas). Bisa ditimpa dengan <meta name="kategori">.
+  categories: [
+    ["Lab Maya", /(simulator|simulasi|lab[ -]?maya|virtual lab|laboratorium)/i],
+    ["Game Edukasi", /\b(game|gim|permainan)\b/i],
+    ["Media Budaya", /(budaya|aksara|tradisi|adat|warisan|kesenian)/i]
+  ],
+  defaultCategory: "Media Pembelajaran",
+  // Judul/deskripsi/tag/gambar kustom (opsional). Kunci: nama repositori, atau "karya/nama-file.html".
+  overrides: {},
+  // Cadangan bila GitHub API tidak dapat diakses.
   fallback: [
     { name: "karya/lab-maya-simuset-studio.html", label: "lab-maya-simuset-studio", collection: "karya", language: "HTML",
       title: "Lab Maya · SimuSet Studio", description: "Simulator set property, kamera, dan lighting studio untuk SMK Broadcasting & Perfilman: rancang set, atur kamera, bentuk cahaya, challenge praktik, K3LH, serta daftar alat & biaya sewa.",
       html_url: "https://github.com/rudichaniago/karya/blob/main/lab-maya-simuset-studio.html",
-      homepage: "https://rudichaniago.github.io/karya/lab-maya-simuset-studio.html", has_pages: false,
-      image: "https://rudichaniago.github.io/karya/lab-maya-simuset-studio.jpg", topics: ["vokasi", "broadcasting", "simulator"], fork: false,
-      stargazers_count: 0, forks_count: 0, pushed_at: "2026-11-18T09:24:09Z", created_at: "2026-11-18T09:24:09Z" },
+      homepage: "https://rudichaniago.github.io/karya/lab-maya-simuset-studio.html",
+      image: "https://rudichaniago.github.io/karya/lab-maya-simuset-studio.jpg", topics: ["vokasi", "broadcasting", "simulator"],
+      pushed_at: "2026-11-18T09:24:09Z", created_at: "2026-11-18T09:24:09Z" },
     { name: "karya/Mengenal Ka Ga Nga.html", label: "Mengenal Ka Ga Nga", collection: "karya", language: "HTML",
       title: "Mengenal Ka Ga Nga", description: "Media pembelajaran interaktif aksara Ka Ga Nga (surat ulu) Sumatra bagian selatan: kisah, peta persebaran, kartu 27 huruf, kuis, dan alih aksara nama.",
       html_url: "https://github.com/rudichaniago/karya/blob/main/Mengenal%20Ka%20Ga%20Nga.html",
-      homepage: "https://rudichaniago.github.io/karya/Mengenal%20Ka%20Ga%20Nga.html", has_pages: false,
-      image: "https://rudichaniago.github.io/karya/Mengenal%20Ka%20Ga%20Nga.jpg", topics: ["budaya", "aksara", "media-pembelajaran"], fork: false,
-      stargazers_count: 0, forks_count: 0, pushed_at: "2026-11-18T08:26:38Z", created_at: "2026-11-18T08:19:48Z" }
-  ]
+      homepage: "https://rudichaniago.github.io/karya/Mengenal%20Ka%20Ga%20Nga.html",
+      image: "https://rudichaniago.github.io/karya/Mengenal%20Ka%20Ga%20Nga.jpg", topics: ["budaya", "aksara", "media-pembelajaran"],
+      pushed_at: "2026-11-18T08:26:38Z", created_at: "2026-11-18T08:19:48Z" }
+  ],
+  // Periksa ulang GitHub tiap N menit selama halaman terbuka (berhenti saat tab disembunyikan).
+  refreshMinutes: 5
 };
 
-const LANG_COLORS = {
-  JavaScript: "#f1e05a", TypeScript: "#3178c6", HTML: "#e34c26", CSS: "#563d7c", Python: "#3572A5",
-  PHP: "#4F5D95", Java: "#b07219", Dart: "#00B4AB", Kotlin: "#A97BFF", Vue: "#41b883",
-  "Jupyter Notebook": "#DA5B0B", Shell: "#89e051", Svelte: "#ff3e00", Go: "#00ADD8"
+/* ---------------- PROFIL PENYUSUN ----------------
+   Baris yang dikosongkan ("") otomatis tidak ditampilkan.
+   Foto: unggah assets/foto-profil.webp (rasio 4:5) lalu isi foto: "assets/foto-profil.webp". */
+const PROFIL = {
+  nama: "Dr. Rudi Nofindra",
+  foto: "",
+  peran: "Guru SMK · Peneliti Teknologi Pendidikan · Penggerak Ekosistem Kebudayaan & Vokasi",
+  bio: "Pendidik vokasi dan penggiat budaya yang berfokus pada teknologi pendidikan dan media digital: memberdayakan generasi muda sekaligus melestarikan warisan budaya. Setiap karya dirancang agar siswa dapat mencoba, salah, dan mengulang dengan aman, cukup dari browser.",
+  biodata: [
+    ["Nama", "Dr. Rudi Nofindra"],
+    ["Profesi", "Guru SMK & Peneliti"],
+    ["Pendidikan", "Doktor Teknologi Pendidikan"],
+    ["Yayasan", "Pengelola Yayasan Svara Bumei Betuah"],
+    ["Jejaring", "Pengurus Pusat Indonesia Creative Cities Network (ICCN)"]
+  ],
+  keahlian: [
+    "Teknologi Pendidikan", "Desain Instruksional", "Pengembangan Kurikulum", "Pedagogi Vokasi",
+    "Media Pembelajaran Interaktif Berbasis Web", "AI dalam Pendidikan", "Multimedia & Digital Learning",
+    "Penelitian & Evaluasi Pembelajaran", "Desain Komunikasi Visual"
+  ],
+  kutipan: "Teknologi Pendidikan dan Inovasi Vokasi Harus Berakar Kuat pada Identitas Budaya untuk Melahirkan Transformasi Masyarakat yang Membebaskan dan Berkelanjutan.",
+  sosial: {
+    github: "https://github.com/rudichaniago",
+    linkedin: "",
+    instagram: "",
+    youtube: ""
+  }
 };
 
-const $ = (s) => document.querySelector(s);
-const state = { repos: [], filter: "Semua", q: "", sort: "pushed" };
-
+/* ================================================================
+   Utilitas
+   ================================================================ */
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const prettify = (name) => name.replace(/[-_.]+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 const fmtDate = (iso) => new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const state = { items: [], view: [], kat: "Semua", topik: "", q: "", sort: "baru", synced: null };
 
-function relTime(iso) {
-  const d = (Date.now() - new Date(iso)) / 86400000;
-  if (d < 1) return "hari ini";
-  if (d < 30) return `${Math.floor(d)} hari lalu`;
-  if (d < 365) return `${Math.floor(d / 30)} bulan lalu`;
-  return `${Math.floor(d / 365)} tahun lalu`;
+const ICON = {
+  copy: '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>',
+  gh: '<svg viewBox="0 0 24 24" class="gh"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg>',
+  linkedin: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7"/></svg>',
+  instagram: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5v.01"/></svg>',
+  youtube: '<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z"/></svg>'
+};
+
+function toast(msg) {
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => t.classList.remove("show"), 2200);
 }
 
-const CACHE_KEY = "bad-repos-v5";
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); }
+  catch {
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.append(ta); ta.select();
+    try { document.execCommand("copy"); } catch {}
+    ta.remove();
+  }
+  toast("Tautan disalin. Tempel di grup kelas atau LMS.");
+}
+
+/* ================================================================
+   Data: GitHub API + metadata tiap aplikasi
+   ================================================================ */
+const CACHE_KEY = "rn-karya-v6";
 function cacheGet() {
   try {
-    const raw = localStorage.getItem(CACHE_KEY);
-    if (!raw) return null;
-    const { t, data } = JSON.parse(raw);
+    const { t, data } = JSON.parse(localStorage.getItem(CACHE_KEY) || "null") || {};
     return Array.isArray(data) ? { t, data } : null;
   } catch { return null; }
 }
@@ -82,7 +132,6 @@ function cacheSet(data) {
   try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), data })); } catch {}
 }
 
-// Selalu ambil data terbaru dari GitHub; salinan di browser hanya dipakai agar halaman tampil seketika.
 async function fetchRepos() {
   const res = await fetch(`https://api.github.com/users/${CONFIG.username}/repos?per_page=100&sort=pushed`, {
     headers: { Accept: "application/vnd.github+json" }
@@ -91,14 +140,14 @@ async function fetchRepos() {
   const data = (await res.json()).map((r) => ({
     name: r.name, description: r.description, language: r.language, html_url: r.html_url,
     homepage: r.homepage, has_pages: r.has_pages, topics: r.topics || [], fork: r.fork, archived: r.archived,
-    stargazers_count: r.stargazers_count, forks_count: r.forks_count, pushed_at: r.pushed_at, created_at: r.created_at
-  }));
+    size: r.size, pushed_at: r.pushed_at, created_at: r.created_at
+  })).filter((r) => r.size > 0 || CONFIG.collections.includes(r.name));
   const expanded = (await Promise.all(data.map(expandCollection))).flat();
   cacheSet(expanded);
   return expanded;
 }
 
-// Ubah repositori koleksi menjadi satu entri per file .html; bila gagal, repositori tetap tampil apa adanya.
+// Repositori koleksi → satu entri per file .html; bila gagal, repositori tetap tampil apa adanya.
 async function expandCollection(r) {
   if (!CONFIG.collections.includes(r.name)) return [r];
   try {
@@ -108,13 +157,18 @@ async function expandCollection(r) {
     if (!res.ok) return [r];
     const all = await res.json();
     const pagesUrl = (f) => `https://${CONFIG.username}.github.io/${r.name}/${f.path.split("/").map(encodeURIComponent).join("/")}`;
-    const images = {};
-    all.filter((f) => f.type === "file" && /\.(jpe?g|png|webp)$/i.test(f.name))
-      .forEach((f) => { images[f.name.replace(/\.[^.]+$/, "").toLowerCase()] = r.has_pages ? pagesUrl(f) : f.download_url; });
+    const fileUrl = (f) => (r.has_pages ? pagesUrl(f) : f.download_url);
+    const base = (n) => n.replace(/\.[^.]+$/, "").toLowerCase();
+    const images = {}, videos = {};
+    for (const f of all) {
+      if (f.type !== "file") continue;
+      if (/\.(jpe?g|png|webp)$/i.test(f.name)) images[base(f.name)] = fileUrl(f);
+      if (/\.(mp4|webm)$/i.test(f.name)) videos[base(f.name)] = fileUrl(f);
+    }
     const files = all.filter((f) => f.type === "file" && /\.html?$/i.test(f.name) && !/^(index|404)\.html?$/i.test(f.name));
     if (!files.length) return [r];
     return Promise.all(files.map(async (f) => {
-      const url = r.has_pages ? pagesUrl(f) : f.download_url;
+      const url = fileUrl(f);
       const meta = await readMeta(url);
       return {
         ...r,
@@ -124,17 +178,21 @@ async function expandCollection(r) {
         title: meta.title || null,
         description: meta.description || null,
         topics: meta.keywords || [],
+        kategori: meta.kategori || null,
+        mapel: meta.mapel || null,
+        kelas: meta.kelas || null,
         language: "HTML",
         html_url: f.html_url,
         homepage: r.has_pages ? url : null,
-        image: images[f.name.replace(/\.html?$/i, "").toLowerCase()] || meta.image || null,
+        image: images[base(f.name)] || meta.image || null,
+        video: videos[base(f.name)] || null,
         has_pages: false
       };
     }));
   } catch { return [r]; }
 }
 
-// Baca metadata dari awal file aplikasi saja (maks. 32 KB), tanpa mengunduh seluruh file.
+// Baca metadata dari awal file aplikasi saja (berhenti di </head> atau maks. 32 KB).
 async function readMeta(url) {
   try {
     const res = await fetch(url);
@@ -156,15 +214,23 @@ async function readMeta(url) {
       title: get('meta[property="og:title"]') || (doc.querySelector("title")?.textContent || "").trim(),
       description: get('meta[name="description"]') || get('meta[property="og:description"]'),
       keywords: get('meta[name="keywords"]').split(",").map((k) => k.trim().toLowerCase().replace(/\s+/g, "-")).filter(Boolean),
+      kategori: get('meta[name="kategori"]'),
+      mapel: get('meta[name="mapel"]'),
+      kelas: get('meta[name="kelas"]'),
       image: image ? new URL(image, url).href : ""
     };
   } catch { return {}; }
 }
 
-function withAutoTags(topics, title, desc) {
+function withAutoTags(topics, text) {
   if (topics.length) return topics;
-  const text = `${title || ""} ${desc || ""}`;
   return Object.entries(CONFIG.autoTags).filter(([, re]) => re.test(text)).map(([t]) => t);
+}
+
+function categoryOf(text, topics) {
+  const hay = `${text} ${topics.join(" ")}`;
+  const hit = CONFIG.categories.find(([, re]) => re.test(hay));
+  return hit ? hit[0] : CONFIG.defaultCategory;
 }
 
 function normalize(list) {
@@ -172,128 +238,450 @@ function normalize(list) {
     .filter((r) => !CONFIG.exclude.includes(r.name) && !r.fork)
     .map((r) => {
       const o = CONFIG.overrides[r.name] || {};
+      const title = o.title || r.title || prettify(r.label || r.name);
+      const desc = o.description || r.description || "";
+      const rawTopics = [...new Set([...(r.topics || []), ...(o.topics || [])].map((t) => t.toLowerCase()))];
+      const topics = withAutoTags(rawTopics, `${title} ${desc}`);
       const live = r.homepage || (r.has_pages ? `https://${CONFIG.username}.github.io/${r.name}/` : null);
+      const updated = r.pushed_at || r.created_at || new Date().toISOString();
       return {
-        ...r,
-        title: o.title || r.title || prettify(r.label || r.name),
-        desc: o.description || r.description || "",
+        id: r.name,
+        title, desc, topics,
+        kategori: o.kategori || r.kategori || categoryOf(`${title} ${desc}`, topics),
+        mapel: o.mapel || r.mapel || "",
+        kelas: o.kelas || r.kelas || "",
         image: o.image || r.image || null,
-        topics: withAutoTags([...new Set([...(r.topics || []), ...(o.topics || [])].map((t) => t.toLowerCase()))], o.title || r.title || r.label || r.name, o.description || r.description),
-        html_url: r.html_url || `https://github.com/${CONFIG.username}/${r.name}`,
+        video: o.video || r.video || null,
         live,
+        code: r.html_url || `https://github.com/${CONFIG.username}/${r.name}`,
+        updated,
+        isNew: (Date.now() - new Date(r.created_at || updated)) / 86400000 < 7,
         featured: CONFIG.featured.includes(r.name)
       };
     });
 }
 
-function renderStats(repos) {
-  $("#stat-repos").textContent = repos.length;
-  $("#stat-pages").textContent = repos.filter((r) => r.live).length;
-  $("#stat-langs").textContent = new Set(repos.map((r) => r.language).filter(Boolean)).size || "–";
-  const latest = repos.map((r) => r.pushed_at).sort().pop();
-  const el = $("#stat-updated");
-  el.textContent = latest ? relTime(latest) : "–";
-  el.classList.add("small");
+/* ================================================================
+   Render: statistik, filter, kartu
+   ================================================================ */
+function countUp(el, n) {
+  if (reduceMotion || !n) { el.textContent = n; return; }
+  const start = performance.now(), dur = 900;
+  const tick = (t) => {
+    const p = Math.min(1, (t - start) / dur);
+    el.textContent = Math.round(n * (1 - Math.pow(1 - p, 3)));
+    if (p < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
 }
 
-function renderFilters(repos) {
-  const langs = [...new Set(repos.map((r) => r.language || "Lainnya"))].sort();
-  const topics = CONFIG.focusTopics.filter((t) => repos.some((r) => r.topics.includes(t))).map((t) => `#${t}`);
-  const opts = ["Semua", ...topics, ...(repos.some((r) => r.live) ? ["Situs Aktif"] : []), ...langs];
-  $("#filters").innerHTML = opts.map((l) =>
-    `<button class="chip" type="button" data-f="${esc(l)}" aria-pressed="${l === state.filter}">${esc(l)}</button>`
+function renderStats() {
+  const items = state.items;
+  const topics = new Set(items.flatMap((i) => i.topics));
+  const prev = renderStats._last || "";
+  const key = `${items.length}|${topics.size}`;
+  if (key === prev) return;
+  renderStats._last = key;
+  countUp($("#stTotal"), items.length);
+  countUp($("#stLab"), items.filter((i) => i.kategori === "Lab Maya").length);
+  countUp($("#stTopik"), topics.size);
+}
+
+function renderFilters() {
+  const counts = {};
+  state.items.forEach((i) => { counts[i.kategori] = (counts[i.kategori] || 0) + 1; });
+  if (state.kat !== "Semua" && !counts[state.kat]) state.kat = "Semua";
+  const kats = ["Semua", ...Object.keys(counts).sort((a, b) => counts[b] - counts[a] || a.localeCompare(b, "id"))];
+  $("#chips").innerHTML = kats.map((k) =>
+    `<button class="chip" type="button" data-k="${esc(k)}" aria-pressed="${k === state.kat}">${esc(k)} <span>${k === "Semua" ? state.items.length : counts[k]}</span></button>`
   ).join("");
+
+  const all = [...new Set(state.items.flatMap((i) => i.topics))];
+  const ordered = [...CONFIG.focusTopics.filter((t) => all.includes(t)), ...all.filter((t) => !CONFIG.focusTopics.includes(t)).sort()];
+  if (state.topik && !ordered.includes(state.topik)) state.topik = "";
+  $("#topik").innerHTML = `<option value="">Semua topik</option>` +
+    ordered.map((t) => `<option value="${esc(t)}"${t === state.topik ? " selected" : ""}>#${esc(t)}</option>`).join("");
 }
 
-function card(r) {
-  const color = LANG_COLORS[r.language] || "var(--gold)";
-  const badge = r.live ? `<span class="badge badge--live">Live</span>` : r.featured ? `<span class="badge">Unggulan</span>` : r.archived ? `<span class="badge">Arsip</span>` : "";
+function thumbHTML(i, withVideo) {
   return `
-  <article class="card">
-    <div class="card__thumb" aria-hidden="true">
-      <span>${esc(r.title)}</span>
-      ${r.image ? `<img src="${esc(r.image)}" alt="" loading="lazy" decoding="async" onerror="this.remove()">` : ""}
-    </div>
-    ${r.collection ? `<p class="card__kicker">Koleksi ${esc(prettify(r.collection))}</p>` : ""}
-    <div class="card__top">
-      <h3><a href="${esc(r.live || r.html_url)}" target="_blank" rel="noopener">${esc(r.title)}</a></h3>
-      ${badge}
-    </div>
-    <p class="${r.desc ? "" : "muted"}">${esc(r.desc || "Deskripsi belum ditambahkan.")}</p>
-    ${r.topics.length ? `<div class="topics">${r.topics.slice(0, 5).map((t) => `<span>#${esc(t)}</span>`).join("")}</div>` : ""}
-    <div class="meta">
-      <span><i class="dot" style="background:${color}"></i>${esc(r.language || "Lainnya")}</span>
-      ${r.stargazers_count ? `<span>★ ${r.stargazers_count}</span>` : ""}
-      <span title="${esc(fmtDate(r.pushed_at))}">Diperbarui ${relTime(r.pushed_at)}</span>
-    </div>
-    <div class="card__links">
-      <a href="${esc(r.html_url)}" target="_blank" rel="noopener">Kode sumber ↗</a>
-      ${r.live ? `<a href="${esc(r.live)}" target="_blank" rel="noopener">Buka situs ↗</a>` : ""}
+    <span class="thumb__title">${esc(i.title)}</span>
+    ${i.image ? `<img src="${esc(i.image)}" alt="" loading="lazy" decoding="async" onerror="this.remove()">` : ""}
+    ${withVideo && i.video ? `<video muted loop playsinline preload="none" data-src="${esc(i.video)}"></video>` : ""}`;
+}
+
+function card(i, idx) {
+  const isLab = i.kategori === "Lab Maya";
+  const openLabel = i.live ? (isLab ? "Buka Lab ↗" : "Buka Karya ↗") : "Lihat Kode ↗";
+  const flag = i.featured ? `<span class="badge badge--star">★ Unggulan</span>` : i.isNew ? `<span class="badge badge--new">Baru</span>` : "";
+  return `
+  <article class="card reveal" data-idx="${idx}">
+    <button class="thumb" type="button" data-open="${idx}" aria-label="Lihat demo ${esc(i.title)}">
+      ${thumbHTML(i, true)}
+      <span class="thumb__hint">${i.video ? "▶ Lihat demo" : "⤢ Pratinjau"}</span>
+    </button>
+    <span class="badge badge--kat" data-k="${esc(i.kategori)}">${esc(i.kategori)}</span>
+    ${flag}
+    <div class="card__body">
+      <p class="card__meta">
+        ${i.mapel ? `<span class="mapel">${esc(i.mapel)}</span>` : ""}
+        ${i.kelas ? `<span>${esc(i.kelas)}</span>` : ""}
+        <span>Diperbarui ${fmtDate(i.updated)}</span>
+      </p>
+      <h3>${esc(i.title)}</h3>
+      <p class="card__desc${i.desc ? "" : " muted"}">${esc(i.desc || "Deskripsi belum ditambahkan.")}</p>
+      ${i.topics.length ? `<div class="tags">${i.topics.slice(0, 5).map((t) => `<span>#${esc(t)}</span>`).join("")}</div>` : ""}
+      <div class="card__act">
+        <a class="btn btn--primary" href="${esc(i.live || i.code)}" target="_blank" rel="noopener">${openLabel}</a>
+        ${i.live ? `<button class="icon-btn" type="button" data-copy="${esc(i.live)}" aria-label="Salin tautan ${esc(i.title)}" title="Salin tautan">${ICON.copy}</button>` : ""}
+        <a class="icon-btn" href="${esc(i.code)}" target="_blank" rel="noopener" aria-label="Kode sumber ${esc(i.title)}" title="Kode sumber">${ICON.gh}</a>
+      </div>
     </div>
   </article>`;
 }
 
 function renderGrid() {
   const q = state.q.trim().toLowerCase();
-  let list = state.repos.filter((r) => {
-    if (state.filter === "Situs Aktif" && !r.live) return false;
-    if (state.filter.startsWith("#")) { if (!r.topics.includes(state.filter.slice(1))) return false; }
-    else if (!["Semua", "Situs Aktif"].includes(state.filter) && (r.language || "Lainnya") !== state.filter) return false;
-    if (!q) return true;
-    return [r.title, r.name, r.desc, ...r.topics].join(" ").toLowerCase().includes(q);
-  });
+  const list = state.items.filter((i) =>
+    (state.kat === "Semua" || i.kategori === state.kat) &&
+    (!state.topik || i.topics.includes(state.topik)) &&
+    (!q || [i.title, i.desc, i.kategori, i.mapel, i.kelas, ...i.topics].join(" ").toLowerCase().includes(q))
+  );
   const by = {
-    pushed: (a, b) => b.pushed_at.localeCompare(a.pushed_at),
-    created: (a, b) => b.created_at.localeCompare(a.created_at),
-    name: (a, b) => a.title.localeCompare(b.title, "id"),
-    stars: (a, b) => b.stargazers_count - a.stargazers_count
+    baru: (a, b) => b.updated.localeCompare(a.updated),
+    az: (a, b) => a.title.localeCompare(b.title, "id"),
+    unggulan: (a, b) => (b.featured - a.featured) || b.updated.localeCompare(a.updated)
   }[state.sort];
-  list.sort((a, b) => (b.featured - a.featured) || by(a, b));
+  list.sort(by);
+  state.view = list;
   $("#grid").innerHTML = list.map(card).join("");
   $("#empty").hidden = list.length > 0;
+  $("#empty").textContent = state.items.length
+    ? "Tidak ada karya yang cocok. Coba kata kunci lain."
+    : "Karya sedang disiapkan. Karya baru akan tampil otomatis di sini.";
+  observeReveal($$("#grid .reveal"));
 }
 
-function bind() {
-  $("#filters").addEventListener("click", (e) => {
-    const b = e.target.closest(".chip");
-    if (!b) return;
-    state.filter = b.dataset.f;
-    document.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", c === b));
-    renderGrid();
-  });
-  $("#q").addEventListener("input", (e) => { state.q = e.target.value; renderGrid(); });
-  $("#sort").addEventListener("change", (e) => { state.sort = e.target.value; renderGrid(); });
-}
-
-async function init() {
-  $("#year").textContent = new Date().getFullYear();
-  bind();
-  const cached = cacheGet();
-  if (cached) render(cached.data);
-  try {
-    render(await fetchRepos());
-    $("#note").hidden = true;
-  } catch (err) {
-    if (cached) return; // tetap tampilkan salinan terakhir
-    render(CONFIG.fallback);
-    const note = $("#note");
-    note.hidden = false;
-    note.textContent = "Data langsung dari GitHub sedang tidak tersedia; menampilkan data cadangan.";
-  }
+function renderSync(ok) {
+  const el = $("#syncInfo");
+  el.classList.toggle("ok", ok);
+  el.textContent = ok
+    ? `Tersinkron dengan GitHub · diperbarui ${new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}`
+    : state.items.length ? "Menampilkan daftar tersimpan (GitHub sedang tidak dapat diakses)" : "GitHub sedang tidak dapat diakses";
 }
 
 function render(raw) {
-  state.repos = normalize(raw);
-  if (!["Semua", "Situs Aktif"].includes(state.filter) && !state.repos.some((r) =>
-    state.filter.startsWith("#") ? r.topics.includes(state.filter.slice(1)) : (r.language || "Lainnya") === state.filter)) {
-    state.filter = "Semua";
-  }
-  renderStats(state.repos);
-  renderFilters(state.repos);
+  const sig = JSON.stringify(raw);
+  if (sig === render._sig) return;
+  render._sig = sig;
+  state.items = normalize(raw);
+  renderStats();
+  renderFilters();
   renderGrid();
-  $("#empty").textContent = state.repos.length
-    ? "Tidak ada karya yang cocok dengan pencarian."
-    : "Karya sedang disiapkan — repositori baru akan tampil otomatis di sini.";
+  renderReel();
+  renderTheater();
+  renderProfileStats();
+}
+
+/* ================================================================
+   Hero: cuplikan berganti (reel)
+   ================================================================ */
+const reel = { list: [], i: 0, timer: null, start: 0, dur: 6000 };
+function reelItems() {
+  const withImg = state.items.filter((i) => i.image || i.video);
+  const src = withImg.length ? withImg : state.items;
+  return [...src].sort((a, b) => (b.featured - a.featured) || b.updated.localeCompare(a.updated)).slice(0, 8);
+}
+function renderReel() {
+  reel.list = reelItems();
+  const screen = $("#reelScreen");
+  $$(".slide", screen).forEach((s) => s.remove());
+  reel.list.forEach((i, n) => {
+    let el;
+    if (i.video) {
+      el = document.createElement("video");
+      el.muted = true; el.playsInline = true; el.preload = "metadata"; el.src = i.video;
+      if (i.image) el.poster = i.image;
+    } else if (i.image) {
+      el = document.createElement("img");
+      el.src = i.image; el.alt = ""; el.decoding = "async";
+    } else {
+      el = document.createElement("div");
+      el.className = "thumb";
+      el.innerHTML = `<span class="thumb__title">${esc(i.title)}</span>`;
+    }
+    el.classList.add("slide");
+    el.dataset.n = n;
+    screen.prepend(el);
+  });
+  $("#reelDots").innerHTML = reel.list.map((i, n) =>
+    `<button type="button" data-n="${n}" aria-label="Cuplikan ${n + 1}: ${esc(i.title)}"></button>`).join("");
+  reelGo(Math.min(reel.i, Math.max(0, reel.list.length - 1)));
+}
+function reelGo(n) {
+  if (!reel.list.length) { $("#reelJudul").textContent = "Belum ada karya"; return; }
+  reel.i = (n + reel.list.length) % reel.list.length;
+  const i = reel.list[reel.i];
+  $$("#reelScreen .slide").forEach((s) => {
+    const on = +s.dataset.n === reel.i;
+    s.classList.toggle("on", on);
+    if (s.tagName === "VIDEO") { if (on) { s.currentTime = 0; s.play().catch(() => {}); } else s.pause(); }
+  });
+  $$("#reelDots button").forEach((d) => d.setAttribute("aria-current", +d.dataset.n === reel.i));
+  $("#reelKat").textContent = [i.kategori, i.mapel].filter(Boolean).join(" · ");
+  $("#reelJudul").textContent = i.title;
+  $("#reelUrl").textContent = (i.live || i.code).replace(/^https?:\/\//, "").replace(/%20/g, " ");
+  reel.start = performance.now();
+  clearTimeout(reel.timer);
+  if (!reduceMotion && reel.list.length > 1) reel.timer = setTimeout(() => reelGo(reel.i + 1), reel.dur);
+}
+function reelProgress(t) {
+  const p = reduceMotion ? 0 : Math.min(1, (t - reel.start) / reel.dur);
+  $("#reelProg").style.width = `${p * 100}%`;
+  requestAnimationFrame(reelProgress);
+}
+
+/* ================================================================
+   Bagian Pratinjau (teater + daftar)
+   ================================================================ */
+const th = { i: 0, timer: null };
+function renderTheater() {
+  const list = [...state.items].sort((a, b) => (b.featured - a.featured) || b.updated.localeCompare(a.updated));
+  th.list = list;
+  $("#playlist").innerHTML = list.map((i, n) => `
+    <li><button type="button" data-n="${n}">
+      <span class="pl__img">${i.image ? `<img src="${esc(i.image)}" alt="" loading="lazy">` : ""}</span>
+      <span><b>${esc(i.title)}</b><small>${esc(i.kategori)}</small></span>
+    </button></li>`).join("");
+  $("#pratinjau").hidden = !list.length;
+  if (list.length) thGo(Math.min(th.i, list.length - 1), false);
+}
+function thGo(n, scroll = true) {
+  const list = th.list;
+  if (!list.length) return;
+  th.i = (n + list.length) % list.length;
+  const i = list[th.i];
+  $("#thScreen").innerHTML = i.video
+    ? `<video src="${esc(i.video)}" ${i.image ? `poster="${esc(i.image)}"` : ""} muted playsinline controls autoplay></video>`
+    : `<span class="thumb__title">${esc(i.title)}</span>${i.image ? `<img src="${esc(i.image)}" alt="Tampilan ${esc(i.title)}">` : ""}`;
+  $("#thMeta").textContent = [i.kategori, i.mapel, i.kelas].filter(Boolean).join(" · ");
+  $("#thJudul").textContent = i.title;
+  $("#thDesk").textContent = i.desc || "";
+  $$("#playlist button").forEach((b) => b.setAttribute("aria-current", +b.dataset.n === th.i));
+  if (scroll) $(`#playlist button[data-n="${th.i}"]`)?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  clearTimeout(th.timer);
+  const v = $("#thScreen video");
+  if ($("#thAuto").checked && !reduceMotion && list.length > 1) {
+    if (v) v.onended = () => thGo(th.i + 1);
+    else th.timer = setTimeout(() => thGo(th.i + 1), 7000);
+  }
+}
+
+/* ================================================================
+   Jendela demo (modal)
+   ================================================================ */
+const modal = { list: [], i: 0, tab: "pratinjau" };
+function openModal(list, idx, tab = "pratinjau") {
+  modal.list = list; modal.i = idx;
+  const dlg = $("#modal");
+  if (!dlg.open) dlg.showModal();
+  showItem(tab);
+}
+function showItem(tab = modal.tab) {
+  const i = modal.list[modal.i];
+  if (!i) return;
+  $("#mMeta").textContent = [i.kategori, i.mapel, i.kelas].filter(Boolean).join(" · ");
+  $("#mJudul").textContent = i.title;
+  $("#mDesk").textContent = i.desc || "";
+  const url = i.live || i.code;
+  $("#mOpen").href = url;
+  $("#mOpen").textContent = i.live ? "Buka di tab baru ↗" : "Lihat kode ↗";
+  $("#mCopy").dataset.url = url;
+  $("#mUrl").textContent = url.replace(/%20/g, " ");
+  $("#mPreview").innerHTML = i.video
+    ? `<video src="${esc(i.video)}" ${i.image ? `poster="${esc(i.image)}"` : ""} muted loop playsinline controls autoplay></video>`
+    : i.image ? `<img src="${esc(i.image)}" alt="Tampilan ${esc(i.title)}">` : `<div class="thumb__title">${esc(i.title)}</div>`;
+  $("#mFrame").dataset.src = i.live || "";
+  $("#mFrame").removeAttribute("src");
+  $('.tabs [data-tab="live"]').disabled = !i.live;
+  renderQr(url);
+  setTab(tab === "live" && !i.live ? "pratinjau" : tab);
+}
+function setTab(tab) {
+  modal.tab = tab;
+  $(".modal__stage").dataset.tab = tab;
+  $$(".tabs [data-tab]").forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === tab));
+  $$(".modal__stage .pane").forEach((p) => { p.hidden = p.dataset.pane !== tab; });
+  const f = $("#mFrame");
+  if (tab === "live" && f.dataset.src && f.getAttribute("src") !== f.dataset.src) f.src = f.dataset.src;
+  if (tab !== "live") f.removeAttribute("src");
+  const v = $("#mPreview video");
+  if (v) { if (tab === "pratinjau") v.play().catch(() => {}); else v.pause(); }
+}
+function renderQr(url) {
+  const box = $("#mQr");
+  if (typeof qrcode !== "function") { box.textContent = "QR tidak tersedia"; return; }
+  const qr = qrcode(0, "M");
+  qr.addData(url);
+  qr.make();
+  box.innerHTML = qr.createSvgTag({ cellSize: 5, margin: 0, scalable: true, alt: "QR Code tautan karya" });
+}
+function closeModal() {
+  $("#mFrame").removeAttribute("src");
+  $("#mPreview").innerHTML = "";
+  $("#modal").close();
+}
+
+/* ================================================================
+   Profil
+   ================================================================ */
+function renderProfile() {
+  const p = PROFIL;
+  $("#pfNama").textContent = p.nama;
+  $("#heroNama").textContent = p.nama;
+  $("#pfPeran").textContent = p.peran;
+  $("#pfBio").textContent = p.bio;
+  const initials = p.nama.replace(/^(dr|prof|ir)\.?\s+/i, "").split(/\s+/).map((w) => w[0]).slice(0, 2).join("").toUpperCase();
+  $("#pfFoto").innerHTML = `<span>${esc(initials)}</span>`;
+  $("#heroAva").textContent = initials;
+  if (p.foto) {
+    const img = new Image();
+    img.onload = () => {
+      $("#pfFoto").innerHTML = `<img src="${esc(p.foto)}" alt="Foto ${esc(p.nama)}" loading="lazy">`;
+      $("#heroAva").innerHTML = `<img src="${esc(p.foto)}" alt="">`;
+    };
+    img.src = p.foto;
+  }
+  $("#pfBiodata").innerHTML = p.biodata.filter(([, v]) => v).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("");
+  $("#pfKeahlian").innerHTML = p.keahlian.map((k) => `<li>${esc(k)}</li>`).join("");
+  $("#pfQuote").textContent = `“${p.kutipan}”`;
+  $("#pfQuote").hidden = !p.kutipan;
+  const soc = Object.entries(p.sosial).filter(([, u]) => u);
+  const label = { github: "GitHub", linkedin: "LinkedIn", instagram: "Instagram", youtube: "YouTube" };
+  $("#pfSosial").innerHTML = soc.map(([k, u]) =>
+    `<a class="icon-btn" href="${esc(u)}" target="_blank" rel="noopener" aria-label="${label[k]}" title="${label[k]}">${ICON[k === "github" ? "gh" : k]}</a>`).join("");
+  $("#footLinks").innerHTML = soc.map(([k, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${label[k]}</a>`).join("");
+}
+function renderProfileStats() {
+  const items = state.items;
+  const topics = [...new Set(items.flatMap((i) => i.topics))];
+  const kats = new Set(items.map((i) => i.kategori));
+  const latest = items.map((i) => i.updated).sort().pop();
+  $("#pfStats").innerHTML = [
+    [items.length, "Karya interaktif"],
+    [items.filter((i) => i.kategori === "Lab Maya").length, "Lab maya & simulator"],
+    [kats.size, "Kategori media"],
+    [latest ? fmtDate(latest).split(" ").slice(1).join(" ") : "–", "Pembaruan terakhir"]
+  ].map(([n, l]) => `<div><b>${esc(n)}</b><span>${esc(l)}</span></div>`).join("");
+  $("#pfBidang").innerHTML = topics.length
+    ? topics.map((t) => `<li>#${esc(t)}</li>`).join("")
+    : `<li>Segera hadir</li>`;
+}
+
+/* ================================================================
+   Animasi muncul & interaksi
+   ================================================================ */
+const io = "IntersectionObserver" in window && !reduceMotion
+  ? new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -8% 0px" })
+  : null;
+function observeReveal(els) {
+  els.forEach((el) => (io ? io.observe(el) : el.classList.add("in")));
+}
+
+function bind() {
+  // Tema
+  $("#themeBtn").addEventListener("click", () => {
+    const root = document.documentElement;
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+    try { localStorage.setItem("rn-theme", root.dataset.theme); } catch {}
+  });
+
+  // Filter & pencarian
+  $("#chips").addEventListener("click", (e) => {
+    const b = e.target.closest(".chip");
+    if (!b) return;
+    state.kat = b.dataset.k;
+    $$("#chips .chip").forEach((c) => c.setAttribute("aria-pressed", c === b));
+    renderGrid();
+  });
+  $("#q").addEventListener("input", (e) => { state.q = e.target.value; renderGrid(); });
+  $("#topik").addEventListener("change", (e) => { state.topik = e.target.value; renderGrid(); });
+  $("#sort").addEventListener("change", (e) => { state.sort = e.target.value; renderGrid(); });
+
+  // Kartu: buka demo, salin tautan, pratinjau video saat kursor di atas
+  $("#grid").addEventListener("click", (e) => {
+    const open = e.target.closest("[data-open]");
+    if (open) return openModal(state.view, +open.dataset.open);
+    const cp = e.target.closest("[data-copy]");
+    if (cp) copyText(cp.dataset.copy);
+  });
+  $("#grid").addEventListener("pointerover", (e) => {
+    const c = e.target.closest(".card");
+    const v = c && $(".thumb video", c);
+    if (!v || c.classList.contains("playing")) return;
+    if (!v.src) v.src = v.dataset.src;
+    v.play().then(() => c.classList.add("playing")).catch(() => {});
+    c.addEventListener("pointerleave", () => { v.pause(); c.classList.remove("playing"); }, { once: true });
+  });
+
+  // Hero
+  $("#btnAcak").addEventListener("click", () => {
+    const pool = state.items.filter((i) => i.live);
+    if (!pool.length) return toast("Belum ada karya yang bisa dibuka.");
+    openModal(pool, Math.floor(Math.random() * pool.length), "live");
+  });
+  $("#reelOpen").addEventListener("click", () => { if (reel.list.length) openModal(reel.list, reel.i); });
+  $("#reelDots").addEventListener("click", (e) => { const d = e.target.closest("[data-n]"); if (d) reelGo(+d.dataset.n); });
+
+  // Pratinjau
+  $("#playlist").addEventListener("click", (e) => { const b = e.target.closest("[data-n]"); if (b) thGo(+b.dataset.n); });
+  $("#thCoba").addEventListener("click", () => openModal(th.list, th.i, "live"));
+  $("#thAuto").addEventListener("change", () => thGo(th.i, false));
+
+  // Modal
+  const dlg = $("#modal");
+  $$(".tabs [data-tab]").forEach((b) => b.addEventListener("click", () => setTab(b.dataset.tab)));
+  $("[data-close]", dlg).addEventListener("click", closeModal);
+  dlg.addEventListener("click", (e) => { if (e.target === dlg) closeModal(); });
+  dlg.addEventListener("cancel", (e) => { e.preventDefault(); closeModal(); });
+  $("#mPrev").addEventListener("click", () => { modal.i = (modal.i - 1 + modal.list.length) % modal.list.length; showItem(); });
+  $("#mNext").addEventListener("click", () => { modal.i = (modal.i + 1) % modal.list.length; showItem(); });
+  $("#mCopy").addEventListener("click", (e) => copyText(e.currentTarget.dataset.url));
+  document.addEventListener("keydown", (e) => {
+    if (!dlg.open || e.target.closest("input, textarea, select")) return;
+    if (e.key === "ArrowLeft") $("#mPrev").click();
+    if (e.key === "ArrowRight") $("#mNext").click();
+  });
+}
+
+/* ================================================================
+   Mulai
+   ================================================================ */
+async function sync() {
+  try {
+    render(await fetchRepos());
+    renderSync(true);
+  } catch {
+    if (!state.items.length) render(CONFIG.fallback);
+    renderSync(false);
+  }
+}
+
+function init() {
+  $("#yr").textContent = new Date().getFullYear();
+  bind();
+  renderProfile();
+  observeReveal($$(".reveal"));
+  requestAnimationFrame(reelProgress);
+  const cached = cacheGet();
+  if (cached) render(cached.data);
+  sync();
+  setInterval(() => { if (!document.hidden) sync(); }, CONFIG.refreshMinutes * 60000);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) { clearTimeout(reel.timer); clearTimeout(th.timer); }
+    else { reelGo(reel.i); thGo(th.i, false); }
+  });
 }
 
 init();
