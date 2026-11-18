@@ -169,7 +169,7 @@ async function expandCollection(r) {
     if (!files.length) return [r];
     return Promise.all(files.map(async (f) => {
       const url = fileUrl(f);
-      const meta = await readMeta(url);
+      const meta = await readMetaCached(url, f.sha);
       return {
         ...r,
         name: `${r.name}/${f.name}`,
@@ -192,7 +192,23 @@ async function expandCollection(r) {
   } catch { return [r]; }
 }
 
-// Baca metadata dari awal file aplikasi saja (berhenti di </head> atau maks. 32 KB).
+// Metadata disimpan per versi file (sha), jadi file besar hanya dibaca sekali per browser.
+const META_KEY = "rn-meta-v1";
+let metaStore = null;
+async function readMetaCached(url, sha) {
+  if (!metaStore) {
+    try { metaStore = JSON.parse(localStorage.getItem(META_KEY) || "{}"); } catch { metaStore = {}; }
+  }
+  if (sha && metaStore[sha]) return metaStore[sha];
+  const meta = await readMeta(url);
+  if (sha && meta.ok) {
+    metaStore[sha] = meta;
+    try { localStorage.setItem(META_KEY, JSON.stringify(metaStore)); } catch {}
+  }
+  return meta;
+}
+
+// Baca metadata dari bagian <head> file aplikasi saja (berhenti di </head>; maks. 512 KB).
 async function readMeta(url) {
   try {
     const res = await fetch(url);
@@ -200,19 +216,22 @@ async function readMeta(url) {
     const reader = res.body.getReader();
     const dec = new TextDecoder();
     let html = "";
-    while (html.length < 32768) {
+    while (html.length < 524288) {
       const { done, value } = await reader.read();
       if (done) break;
       html += dec.decode(value, { stream: true });
       if (/<\/head>/i.test(html)) break;
+      // Metadata biasanya di awal <head>: berhenti bila sudah lewat 32 KB dan deskripsi sudah ditemukan.
+      if (html.length > 32768 && /<meta[^>]+name=["']description["']/i.test(html)) break;
     }
     reader.cancel().catch(() => {});
     const doc = new DOMParser().parseFromString(html, "text/html");
     const get = (sel) => (doc.querySelector(sel)?.getAttribute("content") || "").trim();
     const image = get('meta[property="og:image"]');
     return {
+      ok: true,
       title: get('meta[property="og:title"]') || (doc.querySelector("title")?.textContent || "").trim(),
-      description: get('meta[name="description"]') || get('meta[property="og:description"]'),
+      description: get('meta[name="description"]') || get('meta[property="og:description"]') || get('meta[name="twitter:description"]'),
       keywords: get('meta[name="keywords"]').split(",").map((k) => k.trim().toLowerCase().replace(/\s+/g, "-")).filter(Boolean),
       kategori: get('meta[name="kategori"]'),
       mapel: get('meta[name="mapel"]'),
@@ -220,6 +239,12 @@ async function readMeta(url) {
       image: image ? new URL(image, url).href : ""
     };
   } catch { return {}; }
+}
+
+// Deskripsi cadangan bila aplikasi tidak punya <meta name="description">.
+function autoDescription(title, r) {
+  if (!r.collection && !r.homepage && !r.has_pages) return "";
+  return `Media pembelajaran interaktif "${title}". Buka langsung di browser, tanpa instal.`;
 }
 
 function withAutoTags(topics, text) {
@@ -239,7 +264,7 @@ function normalize(list) {
     .map((r) => {
       const o = CONFIG.overrides[r.name] || {};
       const title = o.title || r.title || prettify(r.label || r.name);
-      const desc = o.description || r.description || "";
+      const desc = o.description || r.description || autoDescription(title, r);
       const rawTopics = [...new Set([...(r.topics || []), ...(o.topics || [])].map((t) => t.toLowerCase()))];
       const topics = withAutoTags(rawTopics, `${title} ${desc}`);
       const live = r.homepage || (r.has_pages ? `https://${CONFIG.username}.github.io/${r.name}/` : null);
