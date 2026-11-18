@@ -1,0 +1,181 @@
+/* ================================================================
+   KONFIGURASI — ubah bagian ini sesuai kebutuhan
+   ================================================================ */
+const CONFIG = {
+  username: "rudichaniago",
+  // Repositori yang tidak ingin ditampilkan
+  exclude: ["desktop-tutorial", "bahanajardigital.github.io"],
+  // Repositori unggulan: tampil paling depan
+  featured: [],
+  // Judul & deskripsi kustom (opsional), menimpa data dari GitHub
+  overrides: {
+    "pendidikanmusikunp": { title: "Pendidikan Musik UNP", description: "Bank data pendidikan musik." },
+    "pendidikanmusik": { title: "Pendidikan Musik", description: "Bank data pendidikan musik." },
+    "rudino": { title: "Rudino" }
+  },
+  // Cadangan bila GitHub API tidak dapat diakses (batas akses tercapai, offline, dll.)
+  fallback: [
+    { name: "pendidikanmusikunp", description: "adalah bank data pendidikan musik", language: null, pushed_at: "2020-02-04T11:51:53Z", created_at: "2020-02-04T11:51:53Z", stargazers_count: 0, forks_count: 0, topics: [], has_pages: false },
+    { name: "rudino", description: null, language: null, pushed_at: "2026-06-09T00:48:39Z", created_at: "2026-06-09T00:48:39Z", stargazers_count: 0, forks_count: 0, topics: [], has_pages: false },
+    { name: "pendidikanmusik", description: "bankdata", language: null, pushed_at: "2020-02-04T11:58:26Z", created_at: "2020-02-04T11:58:26Z", stargazers_count: 0, forks_count: 0, topics: [], has_pages: false }
+  ],
+  cacheMinutes: 30
+};
+
+const LANG_COLORS = {
+  JavaScript: "#f1e05a", TypeScript: "#3178c6", HTML: "#e34c26", CSS: "#563d7c", Python: "#3572A5",
+  PHP: "#4F5D95", Java: "#b07219", Dart: "#00B4AB", Kotlin: "#A97BFF", Vue: "#41b883",
+  "Jupyter Notebook": "#DA5B0B", Shell: "#89e051", Svelte: "#ff3e00", Go: "#00ADD8"
+};
+
+const $ = (s) => document.querySelector(s);
+const state = { repos: [], filter: "Semua", q: "", sort: "pushed" };
+
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const prettify = (name) => name.replace(/[-_.]+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+const fmtDate = (iso) => new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+
+function relTime(iso) {
+  const d = (Date.now() - new Date(iso)) / 86400000;
+  if (d < 1) return "hari ini";
+  if (d < 30) return `${Math.floor(d)} hari lalu`;
+  if (d < 365) return `${Math.floor(d / 30)} bulan lalu`;
+  return `${Math.floor(d / 365)} tahun lalu`;
+}
+
+function cacheGet() {
+  try {
+    const raw = localStorage.getItem("bad-repos");
+    if (!raw) return null;
+    const { t, data } = JSON.parse(raw);
+    return Date.now() - t < CONFIG.cacheMinutes * 60000 ? data : null;
+  } catch { return null; }
+}
+function cacheSet(data) {
+  try { localStorage.setItem("bad-repos", JSON.stringify({ t: Date.now(), data })); } catch {}
+}
+
+async function loadRepos() {
+  const cached = cacheGet();
+  if (cached) return { data: cached, source: "cache" };
+  const res = await fetch(`https://api.github.com/users/${CONFIG.username}/repos?per_page=100&sort=pushed`, {
+    headers: { Accept: "application/vnd.github+json" }
+  });
+  if (!res.ok) throw new Error(`GitHub API ${res.status}`);
+  const data = (await res.json()).map((r) => ({
+    name: r.name, description: r.description, language: r.language, html_url: r.html_url,
+    homepage: r.homepage, has_pages: r.has_pages, topics: r.topics || [], fork: r.fork, archived: r.archived,
+    stargazers_count: r.stargazers_count, forks_count: r.forks_count, pushed_at: r.pushed_at, created_at: r.created_at
+  }));
+  cacheSet(data);
+  return { data, source: "api" };
+}
+
+function normalize(list) {
+  return list
+    .filter((r) => !CONFIG.exclude.includes(r.name) && !r.fork)
+    .map((r) => {
+      const o = CONFIG.overrides[r.name] || {};
+      const live = r.homepage || (r.has_pages ? `https://${CONFIG.username}.github.io/${r.name}/` : null);
+      return {
+        ...r,
+        title: o.title || prettify(r.name),
+        desc: o.description || r.description || "",
+        html_url: r.html_url || `https://github.com/${CONFIG.username}/${r.name}`,
+        live,
+        featured: CONFIG.featured.includes(r.name)
+      };
+    });
+}
+
+function renderStats(repos) {
+  $("#stat-repos").textContent = repos.length;
+  $("#stat-pages").textContent = repos.filter((r) => r.live).length;
+  $("#stat-langs").textContent = new Set(repos.map((r) => r.language).filter(Boolean)).size || "–";
+  const latest = repos.map((r) => r.pushed_at).sort().pop();
+  const el = $("#stat-updated");
+  el.textContent = latest ? relTime(latest) : "–";
+  el.classList.add("small");
+}
+
+function renderFilters(repos) {
+  const langs = [...new Set(repos.map((r) => r.language || "Lainnya"))].sort();
+  const opts = ["Semua", ...(repos.some((r) => r.live) ? ["Situs Aktif"] : []), ...langs];
+  $("#filters").innerHTML = opts.map((l) =>
+    `<button class="chip" type="button" data-f="${esc(l)}" aria-pressed="${l === state.filter}">${esc(l)}</button>`
+  ).join("");
+}
+
+function card(r) {
+  const color = LANG_COLORS[r.language] || "var(--gold)";
+  const badge = r.live ? `<span class="badge badge--live">Live</span>` : r.featured ? `<span class="badge">Unggulan</span>` : r.archived ? `<span class="badge">Arsip</span>` : "";
+  return `
+  <article class="card">
+    <div class="card__top">
+      <h3><a href="${esc(r.live || r.html_url)}" target="_blank" rel="noopener">${esc(r.title)}</a></h3>
+      ${badge}
+    </div>
+    <p class="${r.desc ? "" : "muted"}">${esc(r.desc || "Deskripsi belum ditambahkan.")}</p>
+    ${r.topics.length ? `<div class="topics">${r.topics.slice(0, 5).map((t) => `<span>#${esc(t)}</span>`).join("")}</div>` : ""}
+    <div class="meta">
+      <span><i class="dot" style="background:${color}"></i>${esc(r.language || "Lainnya")}</span>
+      ${r.stargazers_count ? `<span>★ ${r.stargazers_count}</span>` : ""}
+      <span title="${esc(fmtDate(r.pushed_at))}">Diperbarui ${relTime(r.pushed_at)}</span>
+    </div>
+    <div class="card__links">
+      <a href="${esc(r.html_url)}" target="_blank" rel="noopener">Kode sumber ↗</a>
+      ${r.live ? `<a href="${esc(r.live)}" target="_blank" rel="noopener">Buka situs ↗</a>` : ""}
+    </div>
+  </article>`;
+}
+
+function renderGrid() {
+  const q = state.q.trim().toLowerCase();
+  let list = state.repos.filter((r) => {
+    if (state.filter === "Situs Aktif" && !r.live) return false;
+    if (!["Semua", "Situs Aktif"].includes(state.filter) && (r.language || "Lainnya") !== state.filter) return false;
+    if (!q) return true;
+    return [r.title, r.name, r.desc, ...r.topics].join(" ").toLowerCase().includes(q);
+  });
+  const by = {
+    pushed: (a, b) => b.pushed_at.localeCompare(a.pushed_at),
+    created: (a, b) => b.created_at.localeCompare(a.created_at),
+    name: (a, b) => a.title.localeCompare(b.title, "id"),
+    stars: (a, b) => b.stargazers_count - a.stargazers_count
+  }[state.sort];
+  list.sort((a, b) => (b.featured - a.featured) || by(a, b));
+  $("#grid").innerHTML = list.map(card).join("");
+  $("#empty").hidden = list.length > 0;
+}
+
+function bind() {
+  $("#filters").addEventListener("click", (e) => {
+    const b = e.target.closest(".chip");
+    if (!b) return;
+    state.filter = b.dataset.f;
+    document.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", c === b));
+    renderGrid();
+  });
+  $("#q").addEventListener("input", (e) => { state.q = e.target.value; renderGrid(); });
+  $("#sort").addEventListener("change", (e) => { state.sort = e.target.value; renderGrid(); });
+}
+
+async function init() {
+  $("#year").textContent = new Date().getFullYear();
+  bind();
+  let raw;
+  try {
+    raw = (await loadRepos()).data;
+  } catch (err) {
+    raw = CONFIG.fallback;
+    const note = $("#note");
+    note.hidden = false;
+    note.textContent = "Data langsung dari GitHub sedang tidak tersedia; menampilkan data cadangan.";
+  }
+  state.repos = normalize(raw);
+  renderStats(state.repos);
+  renderFilters(state.repos);
+  renderGrid();
+}
+
+init();

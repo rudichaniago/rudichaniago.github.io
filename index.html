@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bahan Ajar Digital — Rudi Nofindra</title>
+  <meta name="description" content="Etalase karya digital Rudi Nofindra: bahan ajar, media pembelajaran, dan aplikasi berbasis web yang berakar pada identitas budaya.">
+  <meta property="og:title" content="Bahan Ajar Digital — Rudi Nofindra">
+  <meta property="og:description" content="Teknologi pendidikan dan inovasi vokasi yang berakar kuat pada identitas budaya.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%237a2e1d'/%3E%3Cpath d='M16 6l10 10-10 10L6 16z' fill='none' stroke='%23e8b04a' stroke-width='2.5'/%3E%3Cpath d='M16 12l4 4-4 4-4-4z' fill='%23e8b04a'/%3E%3C/svg%3E">
+</head>
+<body>
+  <a class="skip" href="#karya">Lewati ke daftar karya</a>
+
+  <header class="topbar">
+    <div class="wrap topbar__inner">
+      <a class="brand" href="#">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span>Bahan Ajar <b>Digital</b></span>
+      </a>
+      <nav class="nav" aria-label="Navigasi utama">
+        <a href="#karya">Karya</a>
+        <a href="#tentang">Tentang</a>
+        <a href="https://github.com/rudichaniago" target="_blank" rel="noopener">GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero__grid">
+        <div>
+          <p class="eyebrow">Etalase Karya Digital · Rudi Nofindra</p>
+          <h1>Teknologi pendidikan yang <em>berakar</em> pada identitas budaya.</h1>
+          <p class="lead">Kumpulan bahan ajar, media pembelajaran interaktif, bank data, dan aplikasi web untuk pendidikan vokasi dan pelestarian warisan budaya — terbuka untuk dipelajari, digunakan, dan dikembangkan bersama.</p>
+          <div class="hero__cta">
+            <a class="btn btn--primary" href="#karya">Jelajahi Karya</a>
+            <a class="btn btn--ghost" href="https://github.com/rudichaniago" target="_blank" rel="noopener">Profil GitHub</a>
+          </div>
+        </div>
+        <dl class="stats" aria-live="polite">
+          <div><dt>Repositori</dt><dd id="stat-repos">–</dd></div>
+          <div><dt>Situs Aktif</dt><dd id="stat-pages">–</dd></div>
+          <div><dt>Bahasa / Teknologi</dt><dd id="stat-langs">–</dd></div>
+          <div><dt>Pembaruan Terakhir</dt><dd id="stat-updated">–</dd></div>
+        </dl>
+      </div>
+      <div class="songket" aria-hidden="true"></div>
+    </section>
+
+    <section id="karya" class="section">
+      <div class="wrap">
+        <div class="section__head">
+          <div>
+            <p class="eyebrow">Repositori</p>
+            <h2>Semua Karya</h2>
+          </div>
+          <div class="controls">
+            <label class="search">
+              <span class="sr-only">Cari karya</span>
+              <input id="q" type="search" placeholder="Cari judul, deskripsi, topik…" autocomplete="off">
+            </label>
+            <select id="sort" aria-label="Urutkan">
+              <option value="pushed">Terbaru diperbarui</option>
+              <option value="name">Nama (A–Z)</option>
+              <option value="stars">Bintang terbanyak</option>
+              <option value="created">Terbaru dibuat</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="filters" class="chips" role="group" aria-label="Saring berdasarkan teknologi"></div>
+
+        <div id="grid" class="grid" aria-live="polite">
+          <div class="card card--skeleton"></div>
+          <div class="card card--skeleton"></div>
+          <div class="card card--skeleton"></div>
+        </div>
+        <p id="empty" class="empty" hidden>Tidak ada karya yang cocok dengan pencarian.</p>
+        <p id="note" class="note" hidden></p>
+      </div>
+    </section>
+
+    <section id="tentang" class="section section--alt">
+      <div class="wrap about">
+        <div>
+          <p class="eyebrow">Tentang</p>
+          <h2>Pendidik vokasi, peneliti, penggerak ekosistem budaya.</h2>
+        </div>
+        <div class="about__body">
+          <p><strong>Dr. Rudi Nofindra</strong> — Guru SMK dan peneliti Teknologi Pendidikan yang mengembangkan media digital untuk memberdayakan generasi muda sekaligus melestarikan warisan budaya. Pengelola Yayasan Svara Bumei Betuah dan pengurus pusat Indonesia Creative Cities Network (ICCN).</p>
+          <ul class="pillars">
+            <li><span>01</span>Teaching Factory &amp; pembelajaran berbasis proyek</li>
+            <li><span>02</span>Media pembelajaran interaktif berbasis web</li>
+            <li><span>03</span>AI sebagai penguat kapabilitas manusia</li>
+            <li><span>04</span>Kolaborasi Hexa-Helix untuk ekonomi kreatif</li>
+          </ul>
+          <blockquote>“Teknologi Pendidikan dan Inovasi Vokasi Harus Berakar Kuat pada Identitas Budaya untuk Melahirkan Transformasi Masyarakat yang Membebaskan dan Berkelanjutan.”</blockquote>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <span>© <span id="year"></span> Rudi Nofindra · Bahan Ajar Digital</span>
+      <span>Data repositori dimuat langsung dari GitHub.</span>
+    </div>
+  </footer>
+
+  <script src="assets/app.js" defer></script>
+</body>
+</html>
