@@ -158,7 +158,9 @@ async function expandCollection(r) {
     const all = await res.json();
     const pagesUrl = (f) => `https://${CONFIG.username}.github.io/${r.name}/${f.path.split("/").map(encodeURIComponent).join("/")}`;
     const fileUrl = (f) => (r.has_pages ? pagesUrl(f) : f.download_url);
-    const base = (n) => n.replace(/\.[^.]+$/, "").toLowerCase();
+    // Nama dasar untuk mencocokkan aplikasi ↔ thumbnail/video: huruf kecil, dan "-", "_", spasi dianggap sama.
+    // Contoh: "teori-musik-dasar.html" cocok dengan "teori_musik_dasar.jpg" atau "Teori Musik Dasar.png".
+    const base = (n) => n.replace(/\.[^.]+$/, "").toLowerCase().replace(/[\s_-]+/g, "-").replace(/^-|-$/g, "");
     const images = {}, videos = {};
     for (const f of all) {
       if (f.type !== "file") continue;
