@@ -167,9 +167,21 @@ async function expandCollection(r) {
     }
     const files = all.filter((f) => f.type === "file" && /\.html?$/i.test(f.name) && !/^(index|404)\.html?$/i.test(f.name));
     if (!files.length) return [r];
+    // Metadata file baru/berubah dibaca dari commit terbaru (isi pasti sesuai versinya),
+    // bukan dari GitHub Pages yang bisa masih menyajikan salinan lama beberapa menit.
+    let commit = null;
+    if (files.some((f) => !metaHas(f.sha))) {
+      try {
+        const c = await fetch(`https://api.github.com/repos/${CONFIG.username}/${r.name}/commits?per_page=1`, { headers: { Accept: "application/vnd.github+json" } });
+        if (c.ok) commit = (await c.json())[0]?.sha || null;
+      } catch {}
+    }
+    const encPath = (f) => f.path.split("/").map(encodeURIComponent).join("/");
     return Promise.all(files.map(async (f) => {
       const url = fileUrl(f);
-      const meta = await readMetaCached(url, f.sha);
+      const meta = commit
+        ? await readMetaCached(`https://raw.githubusercontent.com/${CONFIG.username}/${r.name}/${commit}/${encPath(f)}`, f.sha)
+        : await readMetaCached(`${url}?v=${f.sha}`, metaHas(f.sha) ? f.sha : null);
       return {
         ...r,
         name: `${r.name}/${f.name}`,
@@ -181,6 +193,8 @@ async function expandCollection(r) {
         kategori: meta.kategori || null,
         mapel: meta.mapel || null,
         kelas: meta.kelas || null,
+        seri: meta.seri || null,
+        urutan: meta.urutan || null,
         language: "HTML",
         html_url: f.html_url,
         homepage: r.has_pages ? url : null,
@@ -193,12 +207,17 @@ async function expandCollection(r) {
 }
 
 // Metadata disimpan per versi file (sha), jadi file besar hanya dibaca sekali per browser.
-const META_KEY = "rn-meta-v1";
+const META_KEY = "rn-meta-v2";
 let metaStore = null;
-async function readMetaCached(url, sha) {
+function metaLoad() {
   if (!metaStore) {
     try { metaStore = JSON.parse(localStorage.getItem(META_KEY) || "{}"); } catch { metaStore = {}; }
   }
+  return metaStore;
+}
+const metaHas = (sha) => !!(sha && metaLoad()[sha]);
+async function readMetaCached(url, sha) {
+  metaLoad();
   if (sha && metaStore[sha]) return metaStore[sha];
   const meta = await readMeta(url);
   if (sha && meta.ok) {
@@ -211,7 +230,7 @@ async function readMetaCached(url, sha) {
 // Baca metadata dari bagian <head> file aplikasi saja (berhenti di </head>; maks. 512 KB).
 async function readMeta(url) {
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, { cache: "no-store" });
     if (!res.ok || !res.body) return {};
     const reader = res.body.getReader();
     const dec = new TextDecoder();
@@ -236,6 +255,8 @@ async function readMeta(url) {
       kategori: get('meta[name="kategori"]'),
       mapel: get('meta[name="mapel"]'),
       kelas: get('meta[name="kelas"]'),
+      seri: get('meta[name="seri"]'),
+      urutan: parseInt(get('meta[name="urutan"]'), 10) || 0,
       image: image ? new URL(image, url).href : ""
     };
   } catch { return {}; }
@@ -275,6 +296,8 @@ function normalize(list) {
         kategori: o.kategori || r.kategori || categoryOf(`${title} ${desc}`, topics),
         mapel: o.mapel || r.mapel || "",
         kelas: o.kelas || r.kelas || "",
+        seri: o.seri || r.seri || "",
+        urutan: +(o.urutan || r.urutan) || 0,
         image: o.image || r.image || null,
         video: o.video || r.video || null,
         live,
@@ -283,7 +306,46 @@ function normalize(list) {
         isNew: (Date.now() - new Date(r.created_at || updated)) / 86400000 < 7,
         featured: CONFIG.featured.includes(r.name)
       };
-    });
+    })
+    .map((i, _, all) => ({ ...i, seriTotal: i.seri ? all.filter((x) => x.seri === i.seri).length : 0 }));
+}
+
+// Kelompok seri (minimal 2 karya), diurutkan menurut <meta name="urutan">.
+function seriesGroups() {
+  const g = {};
+  state.items.filter((i) => i.seri).forEach((i) => (g[i.seri] = g[i.seri] || []).push(i));
+  return Object.entries(g)
+    .filter(([, list]) => list.length > 1)
+    .map(([name, list]) => [name, list.sort((a, b) => (a.urutan || 99) - (b.urutan || 99) || a.title.localeCompare(b.title, "id"))]);
+}
+const seriLabel = (i) => (i.seri ? `Seri ${i.seri}${i.urutan ? ` · ${i.urutan}/${i.seriTotal}` : ""}` : "");
+
+function renderSeries() {
+  const box = $("#series");
+  const groups = seriesGroups();
+  box.hidden = !groups.length;
+  box.innerHTML = groups.map(([name, list]) => `
+    <div class="series reveal">
+      <div class="series__head">
+        <div>
+          <p class="eyebrow">Jalur Belajar</p>
+          <h3>Seri ${esc(name)}</h3>
+          <p>${list.length} karya · ikuti berurutan, dari dasar hingga mahir</p>
+        </div>
+        <button class="btn btn--ghost" type="button" data-series-filter="${esc(name)}">Tampilkan seri ini saja</button>
+      </div>
+      <ol class="series__steps">
+        ${list.map((i, n) => `
+        <li>
+          <button type="button" data-series="${esc(name)}" data-n="${n}" aria-label="Bagian ${n + 1}: ${esc(i.title)}">
+            <span class="series__img">${i.image ? `<img src="${esc(i.image)}" alt="" loading="lazy">` : ""}<span class="series__num">${n + 1}</span></span>
+            <b>${esc(i.title)}</b>
+            <small>${esc(i.kategori)}</small>
+          </button>
+        </li>`).join("")}
+      </ol>
+    </div>`).join("");
+  observeReveal($$("#series .reveal"));
 }
 
 /* ================================================================
@@ -323,9 +385,11 @@ function renderFilters() {
 
   const all = [...new Set(state.items.flatMap((i) => i.topics))];
   const ordered = [...CONFIG.focusTopics.filter((t) => all.includes(t)), ...all.filter((t) => !CONFIG.focusTopics.includes(t)).sort()];
-  if (state.topik && !ordered.includes(state.topik)) state.topik = "";
+  const seris = seriesGroups().map(([name]) => `seri:${name}`);
+  if (state.topik && !ordered.includes(state.topik) && !seris.includes(state.topik)) state.topik = "";
   $("#topik").innerHTML = `<option value="">Semua topik</option>` +
-    ordered.map((t) => `<option value="${esc(t)}"${t === state.topik ? " selected" : ""}>#${esc(t)}</option>`).join("");
+    (seris.length ? `<optgroup label="Seri">${seris.map((v) => `<option value="${esc(v)}"${v === state.topik ? " selected" : ""}>Seri ${esc(v.slice(5))}</option>`).join("")}</optgroup>` : "") +
+    `<optgroup label="Topik">${ordered.map((t) => `<option value="${esc(t)}"${t === state.topik ? " selected" : ""}>#${esc(t)}</option>`).join("")}</optgroup>`;
 }
 
 function thumbHTML(i, withVideo) {
@@ -348,6 +412,7 @@ function card(i, idx) {
     <span class="badge badge--kat" data-k="${esc(i.kategori)}">${esc(i.kategori)}</span>
     ${flag}
     <div class="card__body">
+      ${i.seri ? `<p class="card__seri">${esc(seriLabel(i))}</p>` : ""}
       <p class="card__meta">
         ${i.mapel ? `<span class="mapel">${esc(i.mapel)}</span>` : ""}
         ${i.kelas ? `<span>${esc(i.kelas)}</span>` : ""}
@@ -369,15 +434,15 @@ function renderGrid() {
   const q = state.q.trim().toLowerCase();
   const list = state.items.filter((i) =>
     (state.kat === "Semua" || i.kategori === state.kat) &&
-    (!state.topik || i.topics.includes(state.topik)) &&
-    (!q || [i.title, i.desc, i.kategori, i.mapel, i.kelas, ...i.topics].join(" ").toLowerCase().includes(q))
+    (!state.topik || (state.topik.startsWith("seri:") ? i.seri === state.topik.slice(5) : i.topics.includes(state.topik))) &&
+    (!q || [i.title, i.desc, i.kategori, i.mapel, i.kelas, i.seri, ...i.topics].join(" ").toLowerCase().includes(q))
   );
   const by = {
     baru: (a, b) => b.updated.localeCompare(a.updated),
     az: (a, b) => a.title.localeCompare(b.title, "id"),
     unggulan: (a, b) => (b.featured - a.featured) || b.updated.localeCompare(a.updated)
   }[state.sort];
-  list.sort(by);
+  list.sort(state.topik.startsWith("seri:") ? (a, b) => (a.urutan || 99) - (b.urutan || 99) : by);
   state.view = list;
   $("#grid").innerHTML = list.map(card).join("");
   $("#empty").hidden = list.length > 0;
@@ -406,6 +471,7 @@ function render(raw) {
   renderReel();
   renderTheater();
   renderProfileStats();
+  renderSeries();
 }
 
 /* ================================================================
@@ -515,7 +581,7 @@ function openModal(list, idx, tab = "pratinjau") {
 function showItem(tab = modal.tab) {
   const i = modal.list[modal.i];
   if (!i) return;
-  $("#mMeta").textContent = [i.kategori, i.mapel, i.kelas].filter(Boolean).join(" · ");
+  $("#mMeta").textContent = [seriLabel(i), i.kategori, i.mapel, i.kelas].filter(Boolean).join(" · ");
   $("#mJudul").textContent = i.title;
   $("#mDesk").textContent = i.desc || "";
   const url = i.live || i.code;
@@ -648,6 +714,23 @@ function bind() {
     if (!v.src) v.src = v.dataset.src;
     v.play().then(() => c.classList.add("playing")).catch(() => {});
     c.addEventListener("pointerleave", () => { v.pause(); c.classList.remove("playing"); }, { once: true });
+  });
+
+  // Seri
+  $("#series").addEventListener("click", (e) => {
+    const f = e.target.closest("[data-series-filter]");
+    if (f) {
+      state.topik = `seri:${f.dataset.seriesFilter}`;
+      renderFilters();
+      renderGrid();
+      $("#grid").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+      return;
+    }
+    const b = e.target.closest("[data-series]");
+    if (b) {
+      const g = seriesGroups().find(([name]) => name === b.dataset.series);
+      if (g) openModal(g[1], +b.dataset.n);
+    }
   });
 
   // Hero
