@@ -211,7 +211,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
 .card__meta { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 13.5px; color: var(--muted); font-weight: 600; }
 .card__meta .mapel { color: var(--green); font-weight: 800; }
 .card h3 { font-size: 20px; letter-spacing: -.015em; }
-.card__desc { color: var(--ink-2); font-size: 15px; }
+.card__desc { color: var(--ink-2); font-size: 15px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; overflow: hidden; }
 .card__desc.muted { font-style: italic; color: var(--muted); }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
 .tags span { padding: 4px 9px; border-radius: 7px; background: var(--surface-2); color: var(--ink-2); font-size: 12.5px; font-weight: 600; }
