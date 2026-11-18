@@ -17,11 +17,7 @@ const CONFIG = {
     "rudino": { title: "Rudino", description: "Media pembelajaran vokasi, seni budaya, dan Teaching Factory (TEFA).", topics: ["vokasi", "budaya", "tefa"] }
   },
   // Cadangan bila GitHub API tidak dapat diakses (batas akses tercapai, offline, dll.)
-  fallback: [
-    { name: "pendidikanmusikunp", description: "adalah bank data pendidikan musik", language: null, pushed_at: "2020-02-04T11:51:53Z", created_at: "2020-02-04T11:51:53Z", stargazers_count: 0, forks_count: 0, topics: [], has_pages: false },
-    { name: "rudino", description: null, language: null, pushed_at: "2026-06-09T00:48:39Z", created_at: "2026-06-09T00:48:39Z", stargazers_count: 0, forks_count: 0, topics: [], has_pages: false },
-    { name: "pendidikanmusik", description: "bankdata", language: null, pushed_at: "2020-02-04T11:58:26Z", created_at: "2020-02-04T11:58:26Z", stargazers_count: 0, forks_count: 0, topics: [], has_pages: false }
-  ],
+  fallback: [],
   cacheMinutes: 30
 };
 
@@ -182,6 +178,9 @@ async function init() {
   renderStats(state.repos);
   renderFilters(state.repos);
   renderGrid();
+  if (!state.repos.length) {
+    $("#empty").textContent = "Karya sedang disiapkan — repositori baru akan tampil otomatis di sini.";
+  }
 }
 
 init();
