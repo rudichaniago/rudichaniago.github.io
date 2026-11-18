@@ -1,38 +1,46 @@
-# Bahan Ajar Digital
+# Rudi Nofindra · Etalase Karya
 
-Landing page etalase karya digital Rudi Nofindra. Daftar repositori dimuat otomatis dari GitHub API (`rudichaniago`), jadi repositori baru langsung tampil tanpa perlu mengedit halaman.
+Landing page media pembelajaran interaktif karya Dr. Rudi Nofindra, tayang di **https://rudichaniago.github.io**.
 
-## Struktur
-- `index.html` — halaman utama
-- `assets/style.css` — gaya visual (aksen motif songket, mode terang/gelap)
-- `assets/app.js` — pengambil data GitHub + **CONFIG** di bagian atas
+## Fitur
+- **Hero** dengan bingkai browser yang memutar cuplikan karya unggulan, angka statistik berjalan, dan tombol *Jelajahi Karya*, *🎲 Coba Karya Acak*, GitHub.
+- **Galeri**: filter kategori (Lab Maya, Media Budaya, Game Edukasi, Media Pembelajaran), filter topik, pencarian, urutan. Tiap kartu punya tombol **Buka**, **Salin tautan**, dan **Kode sumber**; arahkan kursor untuk memutar video demo (bila ada).
+- **Jendela demo** (klik gambar kartu): tab *Pratinjau*, *Coba langsung* (aplikasi berjalan di dalam halaman), *QR Code*; navigasi ← →, Esc untuk menutup.
+- **Pratinjau**: layar besar + daftar karya, berganti otomatis.
+- **Cara Pakai** dan **Profil Penyusun**.
+- Sinkron dengan GitHub saat dibuka dan tiap 5 menit; mode terang/gelap; responsif; menghormati *reduced motion*.
 
-## Kustomisasi (`assets/app.js` → `CONFIG`)
-- `exclude` — repositori yang disembunyikan
-- `featured` — repositori unggulan (tampil paling depan)
-- `overrides` — judul/deskripsi kustom per repositori
-- `collections` — repositori koleksi (mis. `karya`): setiap file `.html` di dalamnya tampil sebagai kartu karya sendiri, lengkap dengan tautan langsung ke halamannya. Kunci `overrides`-nya: `"karya/Nama File.html"`.
-
-## Deskripsi & tag otomatis
-Landing page membaca bagian `<head>` setiap file aplikasi di repositori koleksi:
+## Menambah karya baru (repositori `karya`)
+1. Unggah `nama-aplikasi.html` (huruf kecil, tanda hubung, **bukan** `index.html`).
+2. Opsional: `nama-aplikasi.jpg` (thumbnail 1200×630) dan `nama-aplikasi.mp4` (video demo ±10 detik, tanpa suara).
+3. Isi `<head>` aplikasi (di bagian paling atas):
 
 ```html
 <title>Nama Aplikasi</title>
 <meta name="description" content="Deskripsi singkat 1–2 kalimat.">
 <meta name="keywords" content="vokasi, budaya, tefa">
+<meta name="kategori" content="Lab Maya">        <!-- opsional: Lab Maya / Media Budaya / Game Edukasi / Media Pembelajaran -->
+<meta name="mapel" content="Broadcasting & Perfilman">  <!-- opsional -->
+<meta name="kelas" content="Kelas XI · Fase F">  <!-- opsional -->
 <meta property="og:image" content="https://rudichaniago.github.io/karya/nama-aplikasi.jpg">
 ```
 
-Letakkan tag ini di bagian paling atas `<head>` (sebelum `<style>`/`<script>`). Bila `keywords` kosong, tag dipasang otomatis dari kata kunci pada judul/deskripsi (`CONFIG.autoTags`). `overrides` tetap bisa dipakai untuk menimpa.
+Tanpa `keywords`, tag `#vokasi/#budaya/#tefa` dipasang otomatis dari judul & deskripsi; tanpa `kategori`, kategori ditebak dari kata kunci (`CONFIG.categories`).
 
-## Thumbnail kartu
-- **Otomatis (repositori koleksi):** unggah gambar dengan nama sama seperti aplikasinya, mis. `Mengenal Ka Ga Nga.jpg` untuk `Mengenal Ka Ga Nga.html`. Format `.jpg`/`.png`/`.webp`, ukuran ideal **1200×630 px**, usahakan < 300 KB.
-- **Manual (kartu mana pun):** tambahkan `image: "https://..."` di `overrides`.
-- Tanpa gambar, kartu memakai sampul bermotif songket berisi judul karya.
-- `fallback` — data cadangan jika GitHub API tidak dapat diakses
+## Pengaturan (`assets/app.js`)
+- `CONFIG.featured` — karya unggulan (★, tampil di hero).
+- `CONFIG.overrides` — menimpa judul/deskripsi/tag/gambar/kategori/mapel/kelas.
+- `PROFIL` — biodata, keahlian, kutipan, tautan sosial. Foto: unggah `assets/foto-profil.webp` (rasio 4:5) lalu isi `foto`.
 
-Tips: isi **Description**, **Topics**, dan **Website** di setiap repositori GitHub agar kartunya lebih informatif. Repositori dengan GitHub Pages aktif otomatis mendapat tombol "Buka situs".
+> Setelah mengubah `style.css` atau `app.js`, naikkan angka `?v=` di `index.html` agar browser tidak memakai file lama.
 
-## Publikasi di `https://rudichaniago.github.io`
-1. Settings → Pages → Source: *Deploy from a branch* → branch `main`, folder `/ (root)` → Save.
-2. Tunggu 1–5 menit, lalu buka `https://rudichaniago.github.io`.
+## Struktur
+```
+index.html              halaman
+assets/style.css        tampilan (palet marun & emas songket)
+assets/app.js           data, render, interaksi
+assets/vendor/qrcode.js QR Code offline (MIT, Kazuhiko Arase)
+```
+
+## Publikasi
+Settings → Pages → *Deploy from a branch* → `main` / `(root)`.
