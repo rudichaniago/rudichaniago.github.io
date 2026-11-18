@@ -15,5 +15,7 @@ Landing page etalase karya digital Rudi Nofindra. Daftar repositori dimuat otoma
 
 Tips: isi **Description**, **Topics**, dan **Website** di setiap repositori GitHub agar kartunya lebih informatif. Repositori dengan GitHub Pages aktif otomatis mendapat tombol "Buka situs".
 
-## Publikasi
-Settings → Pages → Source: *Deploy from a branch* → pilih branch dan folder `/ (root)`.
+## Publikasi di `https://rudichaniago.github.io`
+1. Settings → General → Repository name: ubah menjadi `rudichaniago.github.io` → Rename.
+2. Settings → Pages → Source: *Deploy from a branch* → branch `main`, folder `/ (root)` → Save.
+3. Tunggu 1–5 menit, lalu buka `https://rudichaniago.github.io`.

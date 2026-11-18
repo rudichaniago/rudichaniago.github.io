@@ -4,7 +4,7 @@
 const CONFIG = {
   username: "rudichaniago",
   // Repositori yang tidak ingin ditampilkan
-  exclude: ["desktop-tutorial", "bahanajardigital.github.io"],
+  exclude: ["desktop-tutorial", "bahanajardigital.github.io", "rudichaniago.github.io"],
   // Repositori unggulan: tampil paling depan
   featured: [],
   // Topik fokus: tampil sebagai filter (#vokasi, #budaya, #tefa) bila dipakai minimal 1 repositori.
