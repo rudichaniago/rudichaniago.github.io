@@ -14,7 +14,7 @@ const CONFIG = {
   overrides: {
     "pendidikanmusikunp": { title: "Pendidikan Musik UNP", description: "Bank data pendidikan musik.", topics: ["budaya"] },
     "pendidikanmusik": { title: "Pendidikan Musik", description: "Bank data pendidikan musik.", topics: ["budaya"] },
-    "rudino": { title: "Rudino" }
+    "rudino": { title: "Rudino", description: "Media pembelajaran vokasi, seni budaya, dan Teaching Factory (TEFA).", topics: ["vokasi", "budaya", "tefa"] }
   },
   // Cadangan bila GitHub API tidak dapat diakses (batas akses tercapai, offline, dll.)
   fallback: [
