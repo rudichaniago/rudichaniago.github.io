@@ -31,6 +31,7 @@
   --b-game: #fbdcc4;  --b-game-ink: #7a3d12;
   --b-media: #e2d8f4; --b-media-ink: #47386e;
   --b-new: #d5e6f7;   --b-new-ink: #1f4a78;
+  --b-guru: #fde5c8;  --b-guru-ink: #6b3f0c;
   --radius: 18px;
   --shadow: 0 1px 2px rgba(90, 70, 110, .05), 0 10px 28px -14px rgba(90, 70, 110, .16);
   --shadow-lg: 0 30px 60px -24px rgba(75, 60, 100, .35);
@@ -226,6 +227,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
 .badge--kat[data-k="Media Budaya"] { background: var(--b-budaya); color: var(--b-budaya-ink); }
 .badge--kat[data-k="Game Edukasi"] { background: var(--b-game); color: var(--b-game-ink); }
 .badge--kat[data-k="Media Pembelajaran"] { background: var(--b-media); color: var(--b-media-ink); }
+.badge--kat[data-k="Alat Guru"] { background: var(--b-guru); color: var(--b-guru-ink); }
 .badge--star { right: 12px; background: var(--gold); color: var(--gold-ink); }
 .badge--new { right: 12px; background: var(--b-new); color: var(--b-new-ink); }
 .card__body { display: flex; flex-direction: column; gap: 10px; flex: 1; padding: 18px 20px 20px; }

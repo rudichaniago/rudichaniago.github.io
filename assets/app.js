@@ -403,7 +403,7 @@ function thumbHTML(i, withVideo) {
 
 function card(i, idx) {
   const isLab = i.kategori === "Lab Maya";
-  const openLabel = i.live ? (isLab ? "Buka Lab ↗" : "Buka Karya ↗") : "Lihat Kode ↗";
+  const openLabel = i.live ? (isLab ? "Buka Lab ↗" : i.kategori === "Alat Guru" ? "Buka Aplikasi ↗" : "Buka Karya ↗") : "Lihat Kode ↗";
   const flag = i.featured ? `<span class="badge badge--star">★ Unggulan</span>` : i.isNew ? `<span class="badge badge--new">Baru</span>` : "";
   return `
   <article class="card reveal" data-idx="${idx}">
