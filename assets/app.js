@@ -7,10 +7,13 @@ const CONFIG = {
   exclude: ["desktop-tutorial", "bahanajardigital.github.io"],
   // Repositori unggulan: tampil paling depan
   featured: [],
+  // Topik fokus: tampil sebagai filter (#vokasi, #budaya, #tefa) bila dipakai minimal 1 repositori.
+  // Topik diambil dari Topics di GitHub + "topics" di overrides di bawah.
+  focusTopics: ["vokasi", "budaya", "tefa"],
   // Judul & deskripsi kustom (opsional), menimpa data dari GitHub
   overrides: {
-    "pendidikanmusikunp": { title: "Pendidikan Musik UNP", description: "Bank data pendidikan musik." },
-    "pendidikanmusik": { title: "Pendidikan Musik", description: "Bank data pendidikan musik." },
+    "pendidikanmusikunp": { title: "Pendidikan Musik UNP", description: "Bank data pendidikan musik.", topics: ["budaya"] },
+    "pendidikanmusik": { title: "Pendidikan Musik", description: "Bank data pendidikan musik.", topics: ["budaya"] },
     "rudino": { title: "Rudino" }
   },
   // Cadangan bila GitHub API tidak dapat diakses (batas akses tercapai, offline, dll.)
@@ -81,6 +84,7 @@ function normalize(list) {
         ...r,
         title: o.title || prettify(r.name),
         desc: o.description || r.description || "",
+        topics: [...new Set([...(r.topics || []), ...(o.topics || [])].map((t) => t.toLowerCase()))],
         html_url: r.html_url || `https://github.com/${CONFIG.username}/${r.name}`,
         live,
         featured: CONFIG.featured.includes(r.name)
@@ -100,7 +104,8 @@ function renderStats(repos) {
 
 function renderFilters(repos) {
   const langs = [...new Set(repos.map((r) => r.language || "Lainnya"))].sort();
-  const opts = ["Semua", ...(repos.some((r) => r.live) ? ["Situs Aktif"] : []), ...langs];
+  const topics = CONFIG.focusTopics.filter((t) => repos.some((r) => r.topics.includes(t))).map((t) => `#${t}`);
+  const opts = ["Semua", ...topics, ...(repos.some((r) => r.live) ? ["Situs Aktif"] : []), ...langs];
   $("#filters").innerHTML = opts.map((l) =>
     `<button class="chip" type="button" data-f="${esc(l)}" aria-pressed="${l === state.filter}">${esc(l)}</button>`
   ).join("");
@@ -133,7 +138,8 @@ function renderGrid() {
   const q = state.q.trim().toLowerCase();
   let list = state.repos.filter((r) => {
     if (state.filter === "Situs Aktif" && !r.live) return false;
-    if (!["Semua", "Situs Aktif"].includes(state.filter) && (r.language || "Lainnya") !== state.filter) return false;
+    if (state.filter.startsWith("#")) { if (!r.topics.includes(state.filter.slice(1))) return false; }
+    else if (!["Semua", "Situs Aktif"].includes(state.filter) && (r.language || "Lainnya") !== state.filter) return false;
     if (!q) return true;
     return [r.title, r.name, r.desc, ...r.topics].join(" ").toLowerCase().includes(q);
   });
