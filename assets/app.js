@@ -19,6 +19,11 @@ const CONFIG = {
   // Untuk karya di repositori koleksi, kuncinya "namarepo/nama file.html".
   // Tambahkan image: "https://..." untuk memasang thumbnail manual pada kartu mana pun.
   overrides: {
+    "karya/lab-maya-simuset-studio.html": {
+      title: "Lab Maya · SimuSet Studio",
+      description: "Simulator set property, kamera, dan lighting studio untuk SMK Broadcasting & Perfilman: rancang set, atur kamera, bentuk cahaya, challenge praktik, K3LH, serta daftar alat & biaya sewa.",
+      topics: ["vokasi", "broadcasting", "simulator"]
+    },
     "karya/Mengenal Ka Ga Nga.html": {
       title: "Mengenal Ka Ga Nga",
       description: "Media pembelajaran interaktif aksara Ka Ga Nga (surat ulu) Sumatra bagian selatan: kisah, peta persebaran, kartu 27 huruf, kuis, dan alih aksara nama.",
@@ -30,6 +35,11 @@ const CONFIG = {
   },
   // Cadangan bila GitHub API tidak dapat diakses (batas akses tercapai, offline, dll.)
   fallback: [
+    { name: "karya/lab-maya-simuset-studio.html", label: "lab-maya-simuset-studio", collection: "karya", description: null, language: "HTML",
+      html_url: "https://github.com/rudichaniago/karya/blob/main/lab-maya-simuset-studio.html",
+      homepage: "https://rudichaniago.github.io/karya/lab-maya-simuset-studio.html", has_pages: false,
+      image: "https://rudichaniago.github.io/karya/lab-maya-simuset-studio.jpg", topics: [], fork: false,
+      stargazers_count: 0, forks_count: 0, pushed_at: "2026-11-18T09:24:09Z", created_at: "2026-11-18T09:24:09Z" },
     { name: "karya/Mengenal Ka Ga Nga.html", label: "Mengenal Ka Ga Nga", collection: "karya", description: null, language: "HTML",
       html_url: "https://github.com/rudichaniago/karya/blob/main/Mengenal%20Ka%20Ga%20Nga.html",
       homepage: "https://rudichaniago.github.io/karya/Mengenal%20Ka%20Ga%20Nga.html", has_pages: false,
@@ -60,7 +70,7 @@ function relTime(iso) {
   return `${Math.floor(d / 365)} tahun lalu`;
 }
 
-const CACHE_KEY = "bad-repos-v3";
+const CACHE_KEY = "bad-repos-v4";
 function cacheGet() {
   try {
     const raw = localStorage.getItem(CACHE_KEY);
