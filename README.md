@@ -22,8 +22,12 @@ Landing page media pembelajaran interaktif karya Dr. Rudi Nofindra, tayang di **
 <meta name="kategori" content="Lab Maya">        <!-- opsional: Lab Maya / Media Budaya / Game Edukasi / Media Pembelajaran -->
 <meta name="mapel" content="Broadcasting & Perfilman">  <!-- opsional -->
 <meta name="kelas" content="Kelas XI · Fase F">  <!-- opsional -->
+<meta name="seri" content="Produksi Video">       <!-- opsional: nama seri/jalur belajar -->
+<meta name="urutan" content="1">                  <!-- opsional: urutan dalam seri -->
 <meta property="og:image" content="https://rudichaniago.github.io/karya/nama-aplikasi.jpg">
 ```
+
+Karya dengan `seri` yang sama (minimal 2) tampil sebagai **Jalur Belajar** berurutan di atas galeri, dan bisa difilter lewat menu topik.
 
 Tanpa `keywords`, tag `#vokasi/#budaya/#tefa` dipasang otomatis dari judul & deskripsi; tanpa `kategori`, kategori ditebak dari kata kunci (`CONFIG.categories`).
 
