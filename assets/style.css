@@ -113,7 +113,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
   background: var(--surface); text-decoration: none; font-size: 14px; color: var(--ink-2); margin-bottom: 22px; }
 .author b { color: var(--ink); }
 .author__ava { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; overflow: hidden; background: var(--accent); color: var(--gold); font-weight: 800; font-size: 13px; }
-.author__ava img { width: 100%; height: 100%; object-fit: cover; }
+.author__ava img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 12%; transform: scale(1.6); transform-origin: 50% 18%; }
 .hero h1 { font-size: clamp(38px, 5.6vw, 64px); font-weight: 800; letter-spacing: -.035em; margin-bottom: 20px; }
 .hl { background: linear-gradient(transparent 60%, color-mix(in srgb, var(--gold) 50%, transparent) 60%); padding: 0 .02em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 .hl--alt { color: var(--accent); font-family: var(--serif); font-style: italic; letter-spacing: -.01em; }
