@@ -10,14 +10,28 @@ const CONFIG = {
   // Topik fokus: tampil sebagai filter (#vokasi, #budaya, #tefa) bila dipakai minimal 1 repositori.
   // Topik diambil dari Topics di GitHub + "topics" di overrides di bawah.
   focusTopics: ["vokasi", "budaya", "tefa"],
-  // Judul & deskripsi kustom (opsional), menimpa data dari GitHub
+  // Repositori koleksi: setiap file .html di dalamnya tampil sebagai kartu karya tersendiri.
+  // Tambahkan file HTML baru ke repositori ini, kartunya muncul otomatis.
+  collections: ["karya"],
+  // Judul & deskripsi kustom (opsional), menimpa data dari GitHub.
+  // Untuk karya di repositori koleksi, kuncinya "namarepo/nama file.html".
   overrides: {
+    "karya/Mengenal Ka Ga Nga.html": {
+      title: "Mengenal Ka Ga Nga",
+      description: "Media pembelajaran interaktif aksara Ka Ga Nga (surat ulu) Sumatra bagian selatan: kisah, peta persebaran, kartu 27 huruf, kuis, dan alih aksara nama.",
+      topics: ["budaya", "aksara", "media-pembelajaran"]
+    },
     "pendidikanmusikunp": { title: "Pendidikan Musik UNP", description: "Bank data pendidikan musik.", topics: ["budaya"] },
     "pendidikanmusik": { title: "Pendidikan Musik", description: "Bank data pendidikan musik.", topics: ["budaya"] },
     "rudino": { title: "Rudino", description: "Media pembelajaran vokasi, seni budaya, dan Teaching Factory (TEFA).", topics: ["vokasi", "budaya", "tefa"] }
   },
   // Cadangan bila GitHub API tidak dapat diakses (batas akses tercapai, offline, dll.)
-  fallback: [],
+  fallback: [
+    { name: "karya/Mengenal Ka Ga Nga.html", label: "Mengenal Ka Ga Nga", collection: "karya", description: null, language: "HTML",
+      html_url: "https://github.com/rudichaniago/karya/blob/main/Mengenal%20Ka%20Ga%20Nga.html",
+      homepage: "https://rudichaniago.github.io/karya/Mengenal%20Ka%20Ga%20Nga.html", has_pages: false, topics: [], fork: false,
+      stargazers_count: 0, forks_count: 0, pushed_at: "2026-11-18T08:26:38Z", created_at: "2026-11-18T08:19:48Z" }
+  ],
   cacheMinutes: 30
 };
 
@@ -42,16 +56,17 @@ function relTime(iso) {
   return `${Math.floor(d / 365)} tahun lalu`;
 }
 
+const CACHE_KEY = "bad-repos-v2";
 function cacheGet() {
   try {
-    const raw = localStorage.getItem("bad-repos");
+    const raw = localStorage.getItem(CACHE_KEY);
     if (!raw) return null;
     const { t, data } = JSON.parse(raw);
     return Date.now() - t < CONFIG.cacheMinutes * 60000 ? data : null;
   } catch { return null; }
 }
 function cacheSet(data) {
-  try { localStorage.setItem("bad-repos", JSON.stringify({ t: Date.now(), data })); } catch {}
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), data })); } catch {}
 }
 
 async function loadRepos() {
@@ -66,8 +81,33 @@ async function loadRepos() {
     homepage: r.homepage, has_pages: r.has_pages, topics: r.topics || [], fork: r.fork, archived: r.archived,
     stargazers_count: r.stargazers_count, forks_count: r.forks_count, pushed_at: r.pushed_at, created_at: r.created_at
   }));
-  cacheSet(data);
-  return { data, source: "api" };
+  const expanded = (await Promise.all(data.map(expandCollection))).flat();
+  cacheSet(expanded);
+  return { data: expanded, source: "api" };
+}
+
+// Ubah repositori koleksi menjadi satu entri per file .html; bila gagal, repositori tetap tampil apa adanya.
+async function expandCollection(r) {
+  if (!CONFIG.collections.includes(r.name)) return [r];
+  try {
+    const res = await fetch(`https://api.github.com/repos/${CONFIG.username}/${r.name}/contents/`, {
+      headers: { Accept: "application/vnd.github+json" }
+    });
+    if (!res.ok) return [r];
+    const files = (await res.json()).filter((f) => f.type === "file" && /\.html?$/i.test(f.name) && !/^(index|404)\.html?$/i.test(f.name));
+    if (!files.length) return [r];
+    return files.map((f) => ({
+      ...r,
+      name: `${r.name}/${f.name}`,
+      label: f.name.replace(/\.html?$/i, ""),
+      collection: r.name,
+      description: null,
+      language: "HTML",
+      html_url: f.html_url,
+      homepage: r.has_pages ? `https://${CONFIG.username}.github.io/${r.name}/${f.path.split("/").map(encodeURIComponent).join("/")}` : null,
+      has_pages: false
+    }));
+  } catch { return [r]; }
 }
 
 function normalize(list) {
@@ -78,7 +118,7 @@ function normalize(list) {
       const live = r.homepage || (r.has_pages ? `https://${CONFIG.username}.github.io/${r.name}/` : null);
       return {
         ...r,
-        title: o.title || prettify(r.name),
+        title: o.title || (r.label ? r.label : prettify(r.name)),
         desc: o.description || r.description || "",
         topics: [...new Set([...(r.topics || []), ...(o.topics || [])].map((t) => t.toLowerCase()))],
         html_url: r.html_url || `https://github.com/${CONFIG.username}/${r.name}`,
@@ -112,6 +152,7 @@ function card(r) {
   const badge = r.live ? `<span class="badge badge--live">Live</span>` : r.featured ? `<span class="badge">Unggulan</span>` : r.archived ? `<span class="badge">Arsip</span>` : "";
   return `
   <article class="card">
+    ${r.collection ? `<p class="card__kicker">Koleksi ${esc(prettify(r.collection))}</p>` : ""}
     <div class="card__top">
       <h3><a href="${esc(r.live || r.html_url)}" target="_blank" rel="noopener">${esc(r.title)}</a></h3>
       ${badge}
