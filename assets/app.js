@@ -16,6 +16,9 @@ const CONFIG = {
   //     <title>, <meta name="description">, <meta name="keywords">,
   //     <meta name="kategori">, <meta name="mapel">, <meta name="kelas">, <meta property="og:image">
   collections: ["karya"],
+  // Repositori lain yang punya GitHub Pages tetapi tanpa index.html juga otomatis dipecah
+  // menjadi kartu per file .html (mis. repositori "lab-maya-kaganga"). Matikan dengan false.
+  autoCollections: true,
   // Tag otomatis bila karya belum punya tag sama sekali.
   autoTags: {
     vokasi: /\b(smk|vokasi|kejuruan|kompetensi keahlian|broadcasting|perfilman|praktik)\b/i,
@@ -149,7 +152,11 @@ async function fetchRepos() {
 
 // Repositori koleksi → satu entri per file .html; bila gagal, repositori tetap tampil apa adanya.
 async function expandCollection(r) {
-  if (!CONFIG.collections.includes(r.name)) return [r];
+  if (CONFIG.exclude.includes(r.name)) return [r];
+  const listed = CONFIG.collections.includes(r.name);
+  // Repositori biasa dengan situs sendiri (homepage) atau tanpa GitHub Pages tetap satu kartu.
+  const auto = CONFIG.autoCollections && r.has_pages && !r.homepage;
+  if (!listed && !auto) return [r];
   try {
     const res = await fetch(`https://api.github.com/repos/${CONFIG.username}/${r.name}/contents/`, {
       headers: { Accept: "application/vnd.github+json" }
@@ -167,6 +174,8 @@ async function expandCollection(r) {
       if (/\.(jpe?g|png|webp)$/i.test(f.name)) images[base(f.name)] = fileUrl(f);
       if (/\.(mp4|webm)$/i.test(f.name)) videos[base(f.name)] = fileUrl(f);
     }
+    // Repositori otomatis yang punya index.html adalah satu situs utuh: tampil sebagai satu kartu.
+    if (!listed && all.some((f) => f.type === "file" && /^index\.html?$/i.test(f.name))) return [r];
     const files = all.filter((f) => f.type === "file" && /\.html?$/i.test(f.name) && !/^(index|404)\.html?$/i.test(f.name));
     if (!files.length) return [r];
     // Metadata file baru/berubah dibaca dari commit terbaru (isi pasti sesuai versinya),

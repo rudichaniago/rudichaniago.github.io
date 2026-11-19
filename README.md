@@ -10,7 +10,10 @@ Landing page media pembelajaran interaktif karya Rudi Nofindra, tayang di **http
 - **Cara Pakai** dan **Profil Penyusun**.
 - Sinkron dengan GitHub saat dibuka dan tiap 5 menit; mode terang/gelap; responsif; menghormati *reduced motion*.
 
-## Menambah karya baru (repositori `karya`)
+## Menambah karya baru
+Unggah ke repositori `karya`, **atau** buat repositori baru dengan GitHub Pages aktif (tanpa `index.html`): setiap file `.html` di dalamnya otomatis tampil sebagai kartu. Repositori yang memakai `index.html` atau kolom *Website* tampil sebagai satu kartu situs.
+
+### Langkah di repositori `karya`
 1. Unggah `nama-aplikasi.html` (huruf kecil, tanda hubung, **bukan** `index.html`).
 2. Opsional: `nama-aplikasi.jpg` (thumbnail 1200×630) dan `nama-aplikasi.mp4` (video demo ±10 detik, tanpa suara).
 3. Isi `<head>` aplikasi (di bagian paling atas):
