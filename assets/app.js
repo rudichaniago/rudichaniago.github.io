@@ -49,6 +49,8 @@ const CONFIG = {
       image: "https://rudichaniago.github.io/karya/Mengenal%20Ka%20Ga%20Nga.jpg", topics: ["budaya", "aksara", "media-pembelajaran"],
       pushed_at: "2026-11-18T08:26:38Z", created_at: "2026-11-18T08:19:48Z" }
   ],
+  // Tampilkan tombol "Kode sumber" (ikon GitHub) di kartu & jendela demo. false = dikunci/disembunyikan.
+  showSource: false,
   // Periksa ulang GitHub tiap N menit selama halaman terbuka (berhenti saat tab disembunyikan).
   refreshMinutes: 5
 };
@@ -75,10 +77,10 @@ const PROFIL = {
   ],
   kutipan: "Teknologi Pendidikan dan Inovasi Vokasi Harus Berakar Kuat pada Identitas Budaya untuk Melahirkan Transformasi Masyarakat yang Membebaskan dan Berkelanjutan.",
   sosial: {
-    github: "https://github.com/rudichaniago",
+    instagram: "https://www.instagram.com/rudi_nofindra/",
     linkedin: "",
-    instagram: "",
-    youtube: ""
+    youtube: "",
+    github: ""   // dikosongkan: profil GitHub tidak ditampilkan
   }
 };
 
@@ -429,6 +431,9 @@ function thumbHTML(i, withVideo) {
 function card(i, idx) {
   const isLab = i.kategori === "Lab Maya";
   const openLabel = i.live ? (isLab ? "Buka Lab ↗" : i.kategori === "Alat Guru" ? "Buka Aplikasi ↗" : "Buka Karya ↗") : "Lihat Kode ↗";
+  const openBtn = i.live || CONFIG.showSource
+    ? `<a class="btn btn--primary" href="${esc(i.live || i.code)}" target="_blank" rel="noopener">${openLabel}</a>`
+    : `<span class="btn btn--primary is-disabled" aria-disabled="true">Segera tersedia</span>`;
   const flag = i.featured ? `<span class="badge badge--star">★ Unggulan</span>` : i.isNew ? `<span class="badge badge--new">Baru</span>` : "";
   return `
   <article class="card reveal" data-idx="${idx}">
@@ -449,9 +454,9 @@ function card(i, idx) {
       <p class="card__desc${i.desc ? "" : " muted"}" title="${esc(i.desc)}">${esc(i.desc || "Deskripsi belum ditambahkan.")}</p>
       ${i.topics.length ? `<div class="tags">${i.topics.slice(0, 5).map((t) => `<span>#${esc(t)}</span>`).join("")}</div>` : ""}
       <div class="card__act">
-        <a class="btn btn--primary" href="${esc(i.live || i.code)}" target="_blank" rel="noopener">${openLabel}</a>
+        ${openBtn}
         ${i.live ? `<button class="icon-btn" type="button" data-copy="${esc(i.live)}" aria-label="Salin tautan ${esc(i.title)}" title="Salin tautan">${ICON.copy}</button>` : ""}
-        <a class="icon-btn" href="${esc(i.code)}" target="_blank" rel="noopener" aria-label="Kode sumber ${esc(i.title)}" title="Kode sumber">${ICON.gh}</a>
+        ${CONFIG.showSource ? `<a class="icon-btn" href="${esc(i.code)}" target="_blank" rel="noopener" aria-label="Kode sumber ${esc(i.title)}" title="Kode sumber">${ICON.gh}</a>` : ""}
       </div>
     </div>
   </article>`;
@@ -548,7 +553,7 @@ function reelGo(n) {
   $$("#reelDots button").forEach((d) => d.setAttribute("aria-current", +d.dataset.n === reel.i));
   $("#reelKat").textContent = [i.kategori, i.mapel].filter(Boolean).join(" · ");
   $("#reelJudul").textContent = i.title;
-  $("#reelUrl").textContent = (i.live || i.code).replace(/^https?:\/\//, "").replace(/%20/g, " ");
+  $("#reelUrl").textContent = (i.live || `${CONFIG.username}.github.io`).replace(/^https?:\/\//, "").replace(/%20/g, " ");
   reel.start = performance.now();
   clearTimeout(reel.timer);
   if (!reduceMotion && reel.list.length > 1) reel.timer = setTimeout(() => reelGo(reel.i + 1), reel.dur);
@@ -611,18 +616,20 @@ function showItem(tab = modal.tab) {
   $("#mMeta").textContent = [seriLabel(i), i.kategori, i.mapel, i.kelas].filter(Boolean).join(" · ");
   $("#mJudul").textContent = i.title;
   $("#mDesk").textContent = i.desc || "";
-  const url = i.live || i.code;
-  $("#mOpen").href = url;
+  const url = i.live || (CONFIG.showSource ? i.code : "");
+  $("#mOpen").hidden = !url;
+  $("#mCopy").hidden = !url;
+  $("#mOpen").href = url || "#";
   $("#mOpen").textContent = i.live ? "Buka di tab baru ↗" : "Lihat kode ↗";
   $("#mCopy").dataset.url = url;
-  $("#mUrl").textContent = url.replace(/%20/g, " ");
+  $("#mUrl").textContent = url ? url.replace(/%20/g, " ") : "Tautan segera tersedia";
   $("#mPreview").innerHTML = i.video
     ? `<video src="${esc(i.video)}" ${i.image ? `poster="${esc(i.image)}"` : ""} muted loop playsinline controls autoplay></video>`
     : i.image ? `<img src="${esc(i.image)}" alt="Tampilan ${esc(i.title)}">` : `<div class="thumb__title">${esc(i.title)}</div>`;
   $("#mFrame").dataset.src = i.live || "";
   $("#mFrame").removeAttribute("src");
   $('.tabs [data-tab="live"]').disabled = !i.live;
-  renderQr(url);
+  if (url) renderQr(url); else $("#mQr").textContent = "";
   setTab(tab === "live" && !i.live ? "pratinjau" : tab);
 }
 function setTab(tab) {

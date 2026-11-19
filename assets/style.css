@@ -98,6 +98,9 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
 .btn--ghost:hover { border-color: var(--gold); }
 .btn--icon { width: 48px; padding: 0; }
 .btn--icon .gh { width: 22px; height: 22px; fill: currentColor; stroke: none; }
+.btn--icon svg:not(.gh) { width: 22px; height: 22px; }
+.btn.is-disabled { opacity: .55; cursor: not-allowed; box-shadow: none; }
+.btn.is-disabled:hover { transform: none; }
 .icon-btn {
   display: inline-grid; place-items: center; width: 42px; height: 42px; border-radius: 11px; flex: none;
   border: 1px solid var(--line); background: var(--surface); cursor: pointer; text-decoration: none; transition: border-color .15s, transform .15s;
