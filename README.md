@@ -1,6 +1,6 @@
 # Rudi Nofindra · Etalase Karya
 
-Landing page media pembelajaran interaktif karya Dr. Rudi Nofindra, tayang di **https://rudichaniago.github.io**.
+Landing page media pembelajaran interaktif karya Rudi Nofindra, tayang di **https://rudichaniago.github.io**.
 
 ## Fitur
 - **Hero** dengan bingkai browser yang memutar cuplikan karya unggulan, angka statistik berjalan, dan tombol *Jelajahi Karya*, *🎲 Coba Karya Acak*, GitHub.

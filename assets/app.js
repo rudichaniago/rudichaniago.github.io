@@ -54,12 +54,12 @@ const CONFIG = {
    Baris yang dikosongkan ("") otomatis tidak ditampilkan.
    Foto: unggah assets/foto-profil.webp (rasio 4:5) lalu isi foto: "assets/foto-profil.webp". */
 const PROFIL = {
-  nama: "Dr. Rudi Nofindra",
+  nama: "Rudi Nofindra",
   foto: "assets/foto-profil.webp",
   peran: "Guru SMK · Peneliti Teknologi Pendidikan · Penggerak Ekosistem Kebudayaan & Vokasi",
   bio: "Pendidik vokasi dan penggiat budaya yang berfokus pada teknologi pendidikan dan media digital: memberdayakan generasi muda sekaligus melestarikan warisan budaya. Setiap karya dirancang agar siswa dapat mencoba, salah, dan mengulang dengan aman, cukup dari browser.",
   biodata: [
-    ["Nama", "Dr. Rudi Nofindra"],
+    ["Nama", "Rudi Nofindra"],
     ["Profesi", "Guru SMK & Peneliti"],
     ["Pendidikan", "Doktor Teknologi Pendidikan"],
     ["Yayasan", "Pengelola Yayasan Svara Bumei Betuah"],
