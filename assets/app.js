@@ -61,7 +61,7 @@ const PROFIL = {
   biodata: [
     ["Nama", "Rudi Nofindra"],
     ["Profesi", "Guru SMK & Peneliti"],
-    ["Pendidikan", "Doktor Teknologi Pendidikan"],
+    ["Pendidikan", "Teknologi Pendidikan"],
     ["Yayasan", "Pengelola Yayasan Svara Bumei Betuah"],
     ["Jejaring", "Pengurus Pusat Indonesia Creative Cities Network (ICCN)"]
   ],
