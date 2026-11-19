@@ -101,6 +101,22 @@ const ICON = {
   youtube: '<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z"/></svg>'
 };
 
+// Gambar baru bisa 404 sebentar selama GitHub Pages memperbarui situs (±1–2 menit setelah unggah).
+// Coba lagi beberapa kali dengan jeda; baru disembunyikan bila tetap gagal.
+const IMG_RETRY_DELAYS = [15000, 45000, 90000];
+function imgRetry(img) {
+  const n = +(img.dataset.retry || 0);
+  if (n >= IMG_RETRY_DELAYS.length) { img.remove(); return; }
+  img.dataset.retry = n + 1;
+  img.style.visibility = "hidden";
+  const base = img.dataset.base || (img.dataset.base = img.src.split("#")[0]);
+  setTimeout(() => {
+    img.onload = () => { img.style.visibility = ""; };
+    img.src = `${base}${base.includes("?") ? "&" : "?"}r=${Date.now()}`;
+  }, IMG_RETRY_DELAYS[n]);
+}
+window.imgRetry = imgRetry;
+
 function toast(msg) {
   const t = $("#toast");
   t.textContent = msg;
@@ -349,7 +365,7 @@ function renderSeries() {
         ${list.map((i, n) => `
         <li>
           <button type="button" data-series="${esc(name)}" data-n="${n}" aria-label="Bagian ${n + 1}: ${esc(i.title)}">
-            <span class="series__img">${i.image ? `<img src="${esc(i.image)}" alt="" loading="lazy">` : ""}<span class="series__num">${n + 1}</span></span>
+            <span class="series__img">${i.image ? `<img src="${esc(i.image)}" alt="" loading="lazy" onerror="imgRetry(this)">` : ""}<span class="series__num">${n + 1}</span></span>
             <b>${esc(i.title)}</b>
             <small>${esc(i.kategori)}</small>
           </button>
@@ -406,7 +422,7 @@ function renderFilters() {
 function thumbHTML(i, withVideo) {
   return `
     <span class="thumb__title">${esc(i.title)}</span>
-    ${i.image ? `<img src="${esc(i.image)}" alt="" loading="lazy" decoding="async" onerror="this.remove()">` : ""}
+    ${i.image ? `<img src="${esc(i.image)}" alt="" loading="lazy" decoding="async" onerror="imgRetry(this)">` : ""}
     ${withVideo && i.video ? `<video muted loop playsinline preload="none" data-src="${esc(i.video)}"></video>` : ""}`;
 }
 
@@ -552,7 +568,7 @@ function renderTheater() {
   th.list = list;
   $("#playlist").innerHTML = list.map((i, n) => `
     <li><button type="button" data-n="${n}">
-      <span class="pl__img">${i.image ? `<img src="${esc(i.image)}" alt="" loading="lazy">` : ""}</span>
+      <span class="pl__img">${i.image ? `<img src="${esc(i.image)}" alt="" loading="lazy" onerror="imgRetry(this)">` : ""}</span>
       <span><b>${esc(i.title)}</b><small>${esc(i.kategori)}</small></span>
     </button></li>`).join("");
   $("#pratinjau").hidden = !list.length;
