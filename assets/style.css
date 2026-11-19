@@ -26,6 +26,7 @@
   --cover: radial-gradient(ellipse at 80% 0%, #f6cfd4, #d9cdef 75%);
   --cover-pattern: rgba(255, 255, 255, .45);
   --cover-ink: #5a3e55;
+  --glow-2: #d9cdef;
   --b-lab: #cfe8da;   --b-lab-ink: #22513a;
   --b-budaya: #f6d3d6; --b-budaya-ink: #7a2f39;
   --b-game: #fbdcc4;  --b-game-ink: #7a3d12;
@@ -40,6 +41,35 @@
   --serif: "Fraunces", Georgia, serif;
   color-scheme: light;
 }
+/* ---------- Pilihan palet (CONFIG.palette atau ?palette=...) ---------- */
+/* Sage & Terakota: hijau daun + tanah liat */
+:root[data-palette="sage"] {
+  --bg: #f7f6f0; --bg-alt: #eef2ea; --surface-2: #f2f1ea;
+  --ink: #2f3a33; --ink-2: #55615a; --muted: #69736c; --line: #e3e6dc;
+  --accent: #a4513a; --accent-2: #c0694f;
+  --gold: #c5dbb5; --gold-ink: #24402c; --gold-soft: #e8f1e1; --gold-glow: rgba(150, 190, 130, .75);
+  --dark: #3d5246; --dark-2: #4b6255;
+  --cover: radial-gradient(ellipse at 80% 0%, #e9d5c4, #c9dcc0 75%); --cover-ink: #4a3a2c; --glow-2: #cfe0c4;
+}
+/* Biru Pantai Panjang: biru laut + pasir */
+:root[data-palette="pantai"] {
+  --bg: #f6f9fb; --bg-alt: #eaf2f7; --surface-2: #eff5f8;
+  --ink: #1f3140; --ink-2: #4a5d6b; --muted: #5f6f7b; --line: #dde8ef;
+  --accent: #1f6f8b; --accent-2: #2c86a6;
+  --gold: #ffd98a; --gold-ink: #4a3510; --gold-soft: #fff1d1; --gold-glow: rgba(255, 217, 138, .85);
+  --dark: #234a63; --dark-2: #2e5b78;
+  --cover: radial-gradient(ellipse at 80% 0%, #fde6c2, #cfe8f3 75%); --cover-ink: #1f4a63; --glow-2: #bfe0ef;
+}
+/* Kopi & Emas: cokelat kopi Bengkulu + emas */
+:root[data-palette="kopi"] {
+  --bg: #faf6f1; --bg-alt: #f1e8de; --surface-2: #f5eee6;
+  --ink: #2e231c; --ink-2: #5c4c41; --muted: #74655a; --line: #eadfd3;
+  --accent: #8a4b2a; --accent-2: #a65f39;
+  --gold: #e9c46a; --gold-ink: #3d2b0b; --gold-soft: #f8ecd0; --gold-glow: rgba(233, 196, 106, .85);
+  --dark: #3b2a22; --dark-2: #4a372d;
+  --cover: radial-gradient(ellipse at 80% 0%, #ecd6bd, #d9b48a 75%); --cover-ink: #4a2e1c; --glow-2: #ecd6bd;
+}
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #1e1c24; --bg-alt: #24212c; --surface: #2a2733; --surface-2: #332f3d;
@@ -132,7 +162,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
 .hero { position: relative; padding: 72px 0 96px; overflow: hidden;
   background:
     radial-gradient(700px 380px at 88% 8%, color-mix(in srgb, var(--gold) 28%, transparent), transparent 70%),
-    radial-gradient(600px 360px at 5% 90%, color-mix(in srgb, #d9cdef 40%, transparent), transparent 70%); }
+    radial-gradient(600px 360px at 5% 90%, color-mix(in srgb, var(--glow-2) 40%, transparent), transparent 70%); }
 .hero__in { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 56px; align-items: center; }
 .author { display: inline-flex; align-items: center; gap: 10px; padding: 5px 16px 5px 5px; border-radius: 999px; border: 1px solid var(--line);
   background: var(--surface); text-decoration: none; font-size: 14px; color: var(--ink-2); margin-bottom: 22px; }
@@ -175,12 +205,43 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
 .float--a { top: -18px; left: -18px; }
 .float--b { bottom: -16px; right: 28px; animation-delay: -2.5s; }
 @keyframes bob { 50% { transform: translateY(-8px); } }
-.songket { position: absolute; left: 0; right: 0; bottom: 0; height: 22px; opacity: .9;
-  background:
-    linear-gradient(135deg, var(--gold) 25%, transparent 25%) -11px 0 / 22px 22px,
-    linear-gradient(225deg, var(--gold) 25%, transparent 25%) -11px 0 / 22px 22px,
-    linear-gradient(315deg, var(--accent) 25%, transparent 25%) 0 0 / 22px 22px,
-    linear-gradient(45deg, var(--accent) 25%, transparent 25%) 0 0 / 22px 22px; }
+/* ---------- Model tampilan hero (CONFIG.layout atau ?layout=...) ---------- */
+.bento { display: none; }
+/* Bento: kolase karya unggulan */
+:root[data-layout="bento"] .reel, :root[data-layout="bento"] .float { display: none; }
+:root[data-layout="bento"] .bento { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.bento__item { position: relative; display: block; padding: 0; border: 0; border-radius: 16px; overflow: hidden; cursor: pointer;
+  aspect-ratio: 1200 / 630; background: var(--cover); box-shadow: var(--shadow); transition: transform .25s, box-shadow .25s; }
+.bento__item:first-child { grid-column: 1 / -1; box-shadow: var(--shadow-lg); }
+.bento__item:hover { transform: translateY(-3px); }
+.bento__item img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.bento__item span { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 12px 10px; text-align: left; color: #fff; font-weight: 700; font-size: 14px;
+  background: linear-gradient(transparent, rgba(30, 20, 40, .82)); }
+.bento__item:first-child span { font-size: 17px; padding: 30px 16px 14px; }
+
+/* Sinematik: gambar karya memenuhi hero */
+:root[data-layout="sinematik"] .hero { min-height: min(720px, 92vh); display: flex; align-items: center; background: #1b1620; color: #fff; }
+:root[data-layout="sinematik"] .hero::before { content: ""; position: absolute; inset: -20px; background: var(--hero-img, none) center / cover no-repeat;
+  filter: blur(3px) saturate(1.1); transform: scale(1.04); transition: background-image .8s; }
+:root[data-layout="sinematik"] .hero::after { content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(18, 12, 24, .88) 0%, rgba(18, 12, 24, .62) 55%, rgba(18, 12, 24, .35) 100%); }
+:root[data-layout="sinematik"] .hero__in { position: relative; z-index: 1; grid-template-columns: minmax(0, 760px); }
+:root[data-layout="sinematik"] .hero__art { display: none; }
+:root[data-layout="sinematik"] .hero h1 { color: #fff; }
+:root[data-layout="sinematik"] .hero .hl { background: none; color: var(--gold); padding: 0; }
+:root[data-layout="sinematik"] .hero .hl--alt { color: var(--gold); }
+:root[data-layout="sinematik"] .hero .lead { color: rgba(255, 255, 255, .86); }
+:root[data-layout="sinematik"] .hero .eyebrow { color: var(--gold); }
+:root[data-layout="sinematik"] .author { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .25); color: rgba(255, 255, 255, .85); }
+:root[data-layout="sinematik"] .author b { color: #fff; }
+:root[data-layout="sinematik"] .hero .btn--ghost { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .3); color: #fff; }
+:root[data-layout="sinematik"] .stats dt { color: rgba(255, 255, 255, .72); }
+:root[data-layout="sinematik"] .stats dd { color: #fff; }
+.hero__now { display: none; }
+:root[data-layout="sinematik"] .hero__now { position: absolute; right: max(16px, calc((100vw - 1180px) / 2)); bottom: 28px; z-index: 1; display: flex; align-items: center; gap: 10px;
+  padding: 8px 8px 8px 16px; border-radius: 999px; background: rgba(255, 255, 255, .14); border: 1px solid rgba(255, 255, 255, .25); color: #fff; font-size: 14px; cursor: pointer; backdrop-filter: blur(6px); }
+:root[data-layout="sinematik"] .hero__now b { color: var(--gold); }
+:root[data-layout="sinematik"] .hero__now i { font-style: normal; padding: 6px 12px; border-radius: 999px; background: var(--gold); color: var(--gold-ink); font-weight: 800; }
 
 /* ---------- Bagian ---------- */
 .section { padding: 88px 0; }
@@ -365,6 +426,8 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
   .hero__art { margin-top: 8px; }
   .hero { padding-top: 40px; }
   .reel { transform: none; }
+  :root[data-layout="sinematik"] .hero { min-height: 0; padding: 48px 0 40px; flex-direction: column; align-items: stretch; }
+  :root[data-layout="sinematik"] .hero__now { position: relative; left: auto; right: auto; bottom: auto; align-self: flex-start; margin: 28px 16px 0; }
   .profile__card { position: static; max-width: 360px; }
   .steps { grid-template-columns: 1fr; }
   .playlist { flex-direction: row; overflow-x: auto; max-height: none; padding-bottom: 6px; }

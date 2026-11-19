@@ -49,6 +49,11 @@ const CONFIG = {
       image: "https://rudichaniago.github.io/karya/Mengenal%20Ka%20Ga%20Nga.jpg", topics: ["budaya", "aksara", "media-pembelajaran"],
       pushed_at: "2026-11-18T08:26:38Z", created_at: "2026-11-18T08:19:48Z" }
   ],
+  // Palet warna: "pastel" | "sage" | "pantai" | "kopi"
+  palette: "pastel",
+  // Model tampilan hero: "etalase" | "sinematik" | "bento"
+  // Coba tanpa mengubah kode: tambahkan ?palette=kopi&layout=sinematik di alamat situs.
+  layout: "etalase",
   // Tampilkan tombol "Kode sumber" (ikon GitHub) di kartu & jendela demo. false = dikunci/disembunyikan.
   showSource: false,
   // Periksa ulang GitHub tiap N menit selama halaman terbuka (berhenti saat tab disembunyikan).
@@ -540,7 +545,17 @@ function renderReel() {
   $("#reelDots").innerHTML = reel.list.map((i, n) =>
     `<button type="button" data-n="${n}" aria-label="Cuplikan ${n + 1}: ${esc(i.title)}"></button>`).join("");
   reelGo(Math.min(reel.i, Math.max(0, reel.list.length - 1)));
+  renderBento();
 }
+// Kolase karya unggulan untuk model "bento"
+function renderBento() {
+  const list = reel.list.filter((i) => i.image).slice(0, 3);
+  $("#bento").innerHTML = list.map((i, n) => `
+    <button class="bento__item" type="button" data-bento="${n}" aria-label="Lihat demo ${esc(i.title)}">
+      <img src="${esc(i.image)}" alt="" loading="lazy" onerror="imgRetry(this)"><span>${esc(i.title)}</span>
+    </button>`).join("");
+}
+
 function reelGo(n) {
   if (!reel.list.length) { $("#reelJudul").textContent = "Belum ada karya"; return; }
   reel.i = (n + reel.list.length) % reel.list.length;
@@ -553,6 +568,8 @@ function reelGo(n) {
   $$("#reelDots button").forEach((d) => d.setAttribute("aria-current", +d.dataset.n === reel.i));
   $("#reelKat").textContent = [i.kategori, i.mapel].filter(Boolean).join(" · ");
   $("#reelJudul").textContent = i.title;
+  $("#heroNowJudul").textContent = i.title;
+  if (i.image) $(".hero").style.setProperty("--hero-img", `url("${i.image.replace(/"/g, "%22")}")`);
   $("#reelUrl").textContent = (i.live || `${CONFIG.username}.github.io`).replace(/^https?:\/\//, "").replace(/%20/g, " ");
   reel.start = performance.now();
   clearTimeout(reel.timer);
@@ -774,6 +791,11 @@ function bind() {
     openModal(pool, Math.floor(Math.random() * pool.length), "live");
   });
   $("#reelOpen").addEventListener("click", () => { if (reel.list.length) openModal(reel.list, reel.i); });
+  $("#heroNow").addEventListener("click", () => { if (reel.list.length) openModal(reel.list, reel.i); });
+  $("#bento").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-bento]");
+    if (b) openModal(reel.list.filter((i) => i.image).slice(0, 3), +b.dataset.bento);
+  });
   $("#reelDots").addEventListener("click", (e) => { const d = e.target.closest("[data-n]"); if (d) reelGo(+d.dataset.n); });
 
   // Pratinjau
@@ -810,7 +832,17 @@ async function sync() {
   }
 }
 
+// Terapkan palet & model tampilan (bisa dicoba lewat ?palette=...&layout=...)
+function applyLook() {
+  const q = new URLSearchParams(location.search);
+  const pick = (key, allowed, fallback) => (allowed.includes(q.get(key)) ? q.get(key) : fallback);
+  const root = document.documentElement;
+  root.dataset.palette = pick("palette", ["pastel", "sage", "pantai", "kopi"], CONFIG.palette);
+  root.dataset.layout = pick("layout", ["etalase", "sinematik", "bento"], CONFIG.layout);
+}
+
 function init() {
+  applyLook();
   $("#yr").textContent = new Date().getFullYear();
   bind();
   renderProfile();
