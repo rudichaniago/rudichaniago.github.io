@@ -37,8 +37,8 @@ Tanpa `keywords`, tag `#vokasi/#budaya/#tefa` dipasang otomatis dari judul & des
 ## Pengaturan (`assets/app.js`)
 - `CONFIG.featured` — karya unggulan (★, tampil di hero).
 - `CONFIG.overrides` — menimpa judul/deskripsi/tag/gambar/kategori/mapel/kelas.
-- `CONFIG.palette` — warna: `pastel` (Pastel Songket), `sage` (Sage & Terakota), `pantai` (Biru Pantai Panjang), `kopi` (Kopi & Emas).
-- `CONFIG.layout` — model hero: `etalase`, `sinematik`, `bento`. Coba tanpa mengubah kode: `https://rudichaniago.github.io/?palette=kopi&layout=sinematik`.
+- `CONFIG.palette` — warna (aktif: `pantai`): `pastel` (Pastel Songket), `sage` (Sage & Terakota), `pantai` (Biru Pantai Panjang), `kopi` (Kopi & Emas).
+- `CONFIG.layout` — model hero (aktif: `sinematik`): `etalase`, `sinematik`, `bento`. Coba tanpa mengubah kode: `https://rudichaniago.github.io/?palette=kopi&layout=sinematik`.
 - `CONFIG.showSource` — `false` (bawaan) menyembunyikan tombol kode sumber/GitHub di kartu & jendela demo.
 - `PROFIL` — biodata, keahlian, kutipan, tautan sosial (ikon tampil di bawah foto & footer). Foto: unggah `assets/foto-profil.webp` (rasio 4:5) lalu isi `foto`.
 

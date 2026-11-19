@@ -27,6 +27,7 @@
   --cover-pattern: rgba(255, 255, 255, .45);
   --cover-ink: #5a3e55;
   --glow-2: #d9cdef;
+  --hero-shade: 18 12 24;   /* lapisan gelap hero Sinematik (R G B) */
   --b-lab: #cfe8da;   --b-lab-ink: #22513a;
   --b-budaya: #f6d3d6; --b-budaya-ink: #7a2f39;
   --b-game: #fbdcc4;  --b-game-ink: #7a3d12;
@@ -50,6 +51,7 @@
   --gold: #c5dbb5; --gold-ink: #24402c; --gold-soft: #e8f1e1; --gold-glow: rgba(150, 190, 130, .75);
   --dark: #3d5246; --dark-2: #4b6255;
   --cover: radial-gradient(ellipse at 80% 0%, #e9d5c4, #c9dcc0 75%); --cover-ink: #4a3a2c; --glow-2: #cfe0c4;
+  --hero-shade: 20 32 24;
 }
 /* Biru Pantai Panjang: biru laut + pasir */
 :root[data-palette="pantai"] {
@@ -59,6 +61,7 @@
   --gold: #ffd98a; --gold-ink: #4a3510; --gold-soft: #fff1d1; --gold-glow: rgba(255, 217, 138, .85);
   --dark: #234a63; --dark-2: #2e5b78;
   --cover: radial-gradient(ellipse at 80% 0%, #fde6c2, #cfe8f3 75%); --cover-ink: #1f4a63; --glow-2: #bfe0ef;
+  --hero-shade: 8 30 44;
 }
 /* Kopi & Emas: cokelat kopi Bengkulu + emas */
 :root[data-palette="kopi"] {
@@ -68,6 +71,7 @@
   --gold: #e9c46a; --gold-ink: #3d2b0b; --gold-soft: #f8ecd0; --gold-glow: rgba(233, 196, 106, .85);
   --dark: #3b2a22; --dark-2: #4a372d;
   --cover: radial-gradient(ellipse at 80% 0%, #ecd6bd, #d9b48a 75%); --cover-ink: #4a2e1c; --glow-2: #ecd6bd;
+  --hero-shade: 32 20 12;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -220,11 +224,11 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
 .bento__item:first-child span { font-size: 17px; padding: 30px 16px 14px; }
 
 /* Sinematik: gambar karya memenuhi hero */
-:root[data-layout="sinematik"] .hero { min-height: min(720px, 92vh); display: flex; align-items: center; background: #1b1620; color: #fff; }
+:root[data-layout="sinematik"] .hero { min-height: min(720px, 92vh); display: flex; align-items: center; background: rgb(var(--hero-shade)); color: #fff; }
 :root[data-layout="sinematik"] .hero::before { content: ""; position: absolute; inset: -20px; background: var(--hero-img, none) center / cover no-repeat;
   filter: blur(3px) saturate(1.1); transform: scale(1.04); transition: background-image .8s; }
 :root[data-layout="sinematik"] .hero::after { content: ""; position: absolute; inset: 0;
-  background: linear-gradient(90deg, rgba(18, 12, 24, .88) 0%, rgba(18, 12, 24, .62) 55%, rgba(18, 12, 24, .35) 100%); }
+  background: linear-gradient(90deg, rgb(var(--hero-shade) / .88) 0%, rgb(var(--hero-shade) / .62) 55%, rgb(var(--hero-shade) / .35) 100%); }
 :root[data-layout="sinematik"] .hero__in { position: relative; z-index: 1; grid-template-columns: minmax(0, 760px); }
 :root[data-layout="sinematik"] .hero__art { display: none; }
 :root[data-layout="sinematik"] .hero h1 { color: #fff; }

@@ -50,10 +50,10 @@ const CONFIG = {
       pushed_at: "2026-11-18T08:26:38Z", created_at: "2026-11-18T08:19:48Z" }
   ],
   // Palet warna: "pastel" | "sage" | "pantai" | "kopi"
-  palette: "pastel",
+  palette: "pantai",
   // Model tampilan hero: "etalase" | "sinematik" | "bento"
   // Coba tanpa mengubah kode: tambahkan ?palette=kopi&layout=sinematik di alamat situs.
-  layout: "etalase",
+  layout: "sinematik",
   // Tampilkan tombol "Kode sumber" (ikon GitHub) di kartu & jendela demo. false = dikunci/disembunyikan.
   showSource: false,
   // Periksa ulang GitHub tiap N menit selama halaman terbuka (berhenti saat tab disembunyikan).
