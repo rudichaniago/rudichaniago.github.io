@@ -40,7 +40,7 @@ const CONFIG = {
       image: "https://rudichaniago.github.io/karya/lab-maya-simuset-studio.jpg", topics: ["vokasi", "broadcasting", "simulator"],
       pushed_at: "2026-11-18T09:24:09Z", created_at: "2026-11-18T09:24:09Z" },
     { name: "karya/Mengenal Ka Ga Nga.html", label: "Mengenal Ka Ga Nga", collection: "karya", language: "HTML",
-      title: "Mengenal Ka Ga Nga", description: "Mengenal Ka Ga Nga adalah media belajar digital interaktif tentang aksara warisan leluhur tanah Rejang. Pengguna menelusuri kisahnya, mengenal 27 huruf induknya, menguji diri lewat kuis, lalu menulis namanya sendiri dalam aksara Ka Ga Nga. Bisa dibuka langsung dari browser ponsel tanpa instalasi. Persembahan Yayasan Svara Bumei Betuah.",
+      title: "Mengenal Ka Ga Nga", description: "Mengenal Ka Ga Nga adalah media belajar digital interaktif tentang aksara warisan leluhur tanah Rejang. Pengguna menelusuri kisahnya, mengenal huruf-huruf induknya, menguji diri lewat kuis, lalu menulis namanya sendiri dalam aksara Ka Ga Nga. Bisa dibuka langsung dari browser ponsel tanpa instalasi. Persembahan Yayasan Svara Bumei Betuah.",
       html_url: "https://github.com/rudichaniago/karya/blob/main/Mengenal%20Ka%20Ga%20Nga.html",
       homepage: "https://rudichaniago.github.io/karya/Mengenal%20Ka%20Ga%20Nga.html",
       image: "https://rudichaniago.github.io/karya/Mengenal%20Ka%20Ga%20Nga.jpg", topics: ["budaya", "aksara", "media-pembelajaran"],
