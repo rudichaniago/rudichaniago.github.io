@@ -37,7 +37,8 @@ Tanpa `keywords`, tag `#vokasi/#budaya/#tefa` dipasang otomatis dari judul & des
 ## Pengaturan (`assets/app.js`)
 - `CONFIG.featured` — karya unggulan (★, tampil di hero).
 - `CONFIG.overrides` — menimpa judul/deskripsi/tag/gambar/kategori/mapel/kelas.
-- `PROFIL` — biodata, keahlian, kutipan, tautan sosial. Foto: unggah `assets/foto-profil.webp` (rasio 4:5) lalu isi `foto`.
+- `CONFIG.showSource` — `false` (bawaan) menyembunyikan tombol kode sumber/GitHub di kartu & jendela demo.
+- `PROFIL` — biodata, keahlian, kutipan, tautan sosial (ikon tampil di bawah foto & footer). Foto: unggah `assets/foto-profil.webp` (rasio 4:5) lalu isi `foto`.
 
 > Setelah mengubah `style.css` atau `app.js`, naikkan angka `?v=` di `index.html` agar browser tidak memakai file lama.
 
