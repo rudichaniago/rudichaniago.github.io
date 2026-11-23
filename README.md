@@ -54,3 +54,9 @@ assets/vendor/qrcode.js QR Code offline (MIT, Kazuhiko Arase)
 
 ## Publikasi
 Settings → Pages → *Deploy from a branch* → `main` / `(root)`.
+
+## Tulisan & CV Digital
+- `tulisan.html` menampilkan arsip publikasi dari `data/tulisan.json`.
+- Tambahkan hanya tulisan yang benar-benar terbit dan masukkan URL media aslinya.
+- `kelola.html` adalah editor draf lokal; draf tersimpan di browser perangkat ini, bukan terkirim ke situs.
+- `cv.html` menyajikan CV digital dan dapat dicetak atau disimpan menjadi PDF.
