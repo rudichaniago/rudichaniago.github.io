@@ -1,0 +1,243 @@
+{
+  "name": "Rudi Nofindra",
+  "title": "Pendidik Vokasi · Teknologi Pendidikan · Kebudayaan",
+  "summary": "Guru profesional, asesor kompetensi keahlian kejuruan, peneliti dan pegiat teknologi pendidikan. Merancang media pembelajaran serta memfasilitasi pelatihan untuk menghubungkan pembelajaran vokasi, teknologi, seni, dan identitas budaya.",
+  "contact": {
+    "email": "rudinofindra17@gmail.com",
+    "location": "Bengkulu, Indonesia",
+    "website": "https://rudichaniago.github.io"
+  },
+  "education": [
+    {
+      "period": "S3",
+      "institution": "Universitas Negeri Padang",
+      "program": "Ilmu Pendidikan – Teknologi Pendidikan",
+      "note": "Awardee Beasiswa Unggulan S3 Kemendikbud; status penyelesaian tidak dirinci pada CV."
+    },
+    {
+      "period": "S2",
+      "institution": "Universitas Negeri Padang",
+      "program": "Magister Teknologi Pendidikan"
+    },
+    {
+      "period": "S1",
+      "institution": "Universitas Bengkulu",
+      "program": "Pendidikan Seni Musik"
+    }
+  ],
+  "experience": [
+    {
+      "period": "2011–sekarang",
+      "role": "Guru",
+      "organization": "SMKN 3 Kota Bengkulu",
+      "description": "Mengajar dan mengembangkan pembelajaran vokasi serta media pembelajaran."
+    },
+    {
+      "period": "2009–2010",
+      "role": "Guru",
+      "organization": "SMP 22 Kota Bengkulu"
+    },
+    {
+      "period": "2006–2007",
+      "role": "Guru",
+      "organization": "SMKN 1 Kota Solok"
+    },
+    {
+      "period": "2004–2007",
+      "role": "Jurnalis, editor, dan kamerawan",
+      "organization": "Favorit TV & Radio"
+    }
+  ],
+  "organizations": [
+    {
+      "period": "2025–sekarang",
+      "role": "Direktur Kemitraan Pendidikan & Vokasi",
+      "organization": "Indonesia Creative Cities Network (ICCN)"
+    },
+    {
+      "period": "2025–sekarang",
+      "role": "Koordinator Divisi",
+      "organization": "Yayasan Svara Bumei Betuah"
+    },
+    {
+      "period": "2023–sekarang",
+      "role": "Wakil Ketua Majelis Dikdasmen",
+      "organization": "Muhammadiyah Provinsi Bengkulu"
+    },
+    {
+      "period": "2023–2025",
+      "role": "Sekretaris Jenderal",
+      "organization": "Perkumpulan Pendidik Broadcasting & Film"
+    },
+    {
+      "period": "2022–2024",
+      "role": "Sekretaris",
+      "organization": "Pengurus Pusat Riset Ikatan Guru Indonesia (IGI)"
+    },
+    {
+      "period": "2021–2025",
+      "role": "Sekretaris Jenderal",
+      "organization": "Pengurus Pusat Ikatan Guru Vokasi Indonesia (IGVI)"
+    }
+  ],
+  "honors": [
+    {
+      "year": "2018",
+      "title": "ASTRA Award Bidang Pendidikan"
+    },
+    {
+      "year": "—",
+      "title": "Awardee Beasiswa Unggulan S3 Kemendikbud"
+    }
+  ],
+  "expertise": [
+    "Teknologi Pendidikan",
+    "Desain instruksional",
+    "Pengembangan kurikulum",
+    "Pedagogi vokasi",
+    "Media pembelajaran interaktif berbasis web",
+    "AI dalam pendidikan",
+    "Multimedia dan digital learning",
+    "Penelitian dan evaluasi pembelajaran",
+    "Desain komunikasi visual",
+    "Asesmen kompetensi keahlian kejuruan"
+  ],
+  "speakingHighlights": [
+    {
+      "period": "2026",
+      "title": "Gemini Academy for Higher Education",
+      "organizer": "Google Indonesia",
+      "role": "Lead Trainer"
+    },
+    {
+      "period": "2026",
+      "title": "ToT Guru Sekolah Model PM & KKA",
+      "organizer": "Kemendikdasmen",
+      "role": "Fasilitator Nasional"
+    },
+    {
+      "period": "2025",
+      "title": "Pelatihan Pembelajaran Mendalam untuk Guru SMK/MA Provinsi Bengkulu",
+      "organizer": "Kemendikdasmen – KGTK Bengkulu",
+      "role": "Fasilitator"
+    },
+    {
+      "period": "2024",
+      "title": "Optimalisasi Literasi Digital untuk Pembelajaran",
+      "organizer": "Universitas Bengkulu",
+      "role": "Narasumber"
+    },
+    {
+      "period": "2024",
+      "title": "Dialog Interaktif RRI Bengkulu: Potensi Ekonomi sebagai Content Creator",
+      "organizer": "RRI Bengkulu",
+      "role": "Narasumber"
+    },
+    {
+      "period": "2021–2023",
+      "title": "Program Organisasi Penggerak",
+      "organizer": "Kemendikbudristek",
+      "role": "Fasilitator"
+    },
+    {
+      "period": "2020–2023",
+      "title": "Berbagai workshop dan webinar pendidikan, literasi digital, pembelajaran daring, dan TEFA",
+      "organizer": "MGMP, IGI, Kemendikbud, perguruan tinggi, dan komunitas pendidikan",
+      "role": "Narasumber / fasilitator"
+    }
+  ],
+  "publications": [
+    {
+      "year": "2026",
+      "title": "Musisi Tradisi Kita Itu Sakti, tapi Sayangnya Mereka Bukan Highlander",
+      "publisher": "Kumparan",
+      "type": "Artikel",
+      "url": "https://kumparan.com/rudi-nofindra/musisi-tradisi-kita-itu-sakti-tapi-sayangnya-mereka-bukan-highlander-26xHukn7odd"
+    },
+    {
+      "year": "2024",
+      "title": "Mempersiapkan Siswa untuk Kebutuhan Dunia yang Terus Berubah",
+      "publisher": "Kumparan",
+      "type": "Artikel",
+      "url": "https://kumparan.com/"
+    },
+    {
+      "year": "2025",
+      "title": "Nyong Dari Timur: Analisis Dampak Psikologis Musik sebagai Identitas dan Kebanggaan Lokal",
+      "publisher": "Lidah Rakyat",
+      "type": "Artikel",
+      "url": "https://www.lidahrakyat.com/c/nyong-dari-timur-analisis-dampak-psikologis-musik-sebagai-identitas-dan-kebanggaan-lokal"
+    },
+    {
+      "year": "2022",
+      "title": "Virtual Culture as the Survival of Art Life in Pandemic Times Within the Community Scope in West Sumatra",
+      "publisher": "Atlantis Press",
+      "type": "Prosiding",
+      "url": "https://www.atlantis-press.com/proceedings/icla-22/125993073"
+    },
+    {
+      "year": "2022",
+      "title": "Merancang Aplikasi Pembelajaran Seni Budaya Berbasis Android",
+      "publisher": "Rajagrafindo Persada",
+      "type": "Buku",
+      "url": ""
+    },
+    {
+      "year": "2020",
+      "title": "Peningkatan Kompetensi Guru Seni Musik Melalui Pembelajaran Berbasis Literasi Menggunakan Pendekatan Kontekstual",
+      "publisher": "Musikolastika: Jurnal Pertunjukan dan Pendidikan Musik",
+      "type": "Artikel jurnal",
+      "url": ""
+    },
+    {
+      "year": "2020",
+      "title": "Stimulating Children’s Mother Tongue Development Through Animated Children Song",
+      "publisher": "Proceeding of the Non-Formal Education International Conference",
+      "type": "Prosiding",
+      "url": ""
+    },
+    {
+      "year": "2019",
+      "title": "Ingatan, lupa dan transfer dalam belajar dan pembelajaran",
+      "publisher": "Jurnal Pendidikan Rokania",
+      "type": "Artikel jurnal",
+      "url": "https://e-jurnal.stkiprokania.ac.id/index.php/jpr/article/download/188/141"
+    },
+    {
+      "year": "2026",
+      "title": "Dokumentasi Visual & Catatan Panggung Pertunjukan Musik Svara Bumei",
+      "publisher": "Heyzine",
+      "type": "Publikasi digital",
+      "url": "https://heyzine.com/flip-book/e1c55b2202.html"
+    },
+    {
+      "year": "2026",
+      "title": "Buku Ajar Dasar-dasar Broadcasting & Film: Jilid 1 & 2",
+      "publisher": "Erlangga",
+      "type": "Buku ajar",
+      "url": ""
+    },
+    {
+      "year": "2026",
+      "title": "Jurnal/Buku Pemikiran Ahmad Syafii Maarif",
+      "publisher": "Maarif Institute",
+      "type": "Naskah lolos seleksi",
+      "url": ""
+    },
+    {
+      "year": "2026",
+      "title": "Buletin Lembaran Perpusnas RI",
+      "publisher": "Perpustakaan Nasional Republik Indonesia",
+      "type": "Naskah lolos seleksi",
+      "url": ""
+    },
+    {
+      "year": "2026",
+      "title": "Daulat Pangan, Monopoli Korporasi dan Ritual Makan Bareng yang Hakiki",
+      "publisher": "Resister – Berdaya Pulih",
+      "type": "Submisi berstatus terbit pada CV",
+      "url": ""
+    }
+  ],
+  "privacyNote": "Nomor ponsel dan alamat rumah dari CV sumber sengaja tidak ditampilkan pada CV digital publik."
+}
