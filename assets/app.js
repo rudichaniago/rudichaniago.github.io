@@ -656,9 +656,11 @@ function showItem(tab = modal.tab) {
   $("#mOpen").textContent = i.locked ? "🔒 Dalam review" : i.live ? "Buka di tab baru ↗" : "Lihat kode ↗";
   $("#mCopy").dataset.url = url;
   $("#mUrl").textContent = url ? url.replace(/%20/g, " ") : "Tautan segera tersedia";
-  $("#mPreview").innerHTML = i.video
-    ? `<video src="${esc(i.video)}" ${i.image ? `poster="${esc(i.image)}"` : ""} muted loop playsinline controls autoplay></video>`
-    : i.image ? `<img src="${esc(i.image)}" alt="Tampilan ${esc(i.title)}">` : `<div class="thumb__title">${esc(i.title)}</div>`;
+  $("#mPreview").innerHTML = i.locked
+    ? `<div class="thumb__title">🔒 Dalam review</div>${i.image ? `<img src="${esc(i.image)}" alt="Tampilan ${esc(i.title)}">` : ""}`
+    : i.video
+      ? `<video src="${esc(i.video)}" ${i.image ? `poster="${esc(i.image)}"` : ""} muted loop playsinline controls autoplay></video>`
+      : i.image ? `<img src="${esc(i.image)}" alt="Tampilan ${esc(i.title)}">` : `<div class="thumb__title">${esc(i.title)}</div>`;
   $("#mFrame").dataset.src = i.live || "";
   $("#mFrame").removeAttribute("src");
   $('.tabs [data-tab="live"]').disabled = !i.live;
