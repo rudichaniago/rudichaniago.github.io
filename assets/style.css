@@ -523,3 +523,53 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
   .cv-block,.cv-layout > aside { box-shadow:none; break-inside:avoid; }
   body { background:white; color:#222; }
 }
+
+/* Halaman publikasi dan CV: palet khusus yang lebih editorial */
+.page-tulisan {
+  --bg:#f5f7f6; --bg-alt:#e9f1ee; --surface:#fff; --surface-2:#eaf2ef;
+  --ink:#1f3532; --ink-2:#4b625d; --muted:#697b76; --line:#d9e5e0;
+  --accent:#14766b; --accent-2:#1b897c; --gold:#eacb83; --gold-ink:#3e321b;
+  --gold-soft:#f6eedb; --gold-glow:rgba(234,203,131,.45);
+  --radius:20px; --shadow:0 12px 32px -20px rgba(25,65,58,.35);
+}
+.page-cv {
+  --bg:#faf7f0; --bg-alt:#f0e8d9; --surface:#fffdf8; --surface-2:#f5eddf;
+  --ink:#332c22; --ink-2:#5f5545; --muted:#786d5d; --line:#e8ddc9;
+  --accent:#8a5428; --accent-2:#a66b39; --gold:#d8b66f; --gold-ink:#38280d;
+  --gold-soft:#f3e8cf; --gold-glow:rgba(216,182,111,.42);
+  --radius:18px; --shadow:0 12px 32px -20px rgba(78,55,24,.3);
+}
+.page-tulisan .page-hero { position:relative; overflow:hidden; padding:88px 0 68px; background:linear-gradient(115deg,#d9eee7 0%,#f0f5ed 54%,#f5ecd7 100%); }
+.page-tulisan .page-hero::after { content:""; position:absolute; width:340px; height:340px; border:1px solid rgba(20,118,107,.16); border-radius:50%; right:5%; top:-190px; box-shadow:0 0 0 35px rgba(20,118,107,.04),0 0 0 75px rgba(20,118,107,.035); pointer-events:none; }
+.page-tulisan .page-hero .wrap { position:relative; z-index:1; }
+.page-tulisan .page-hero h1 { max-width:760px; color:#193f39; }
+.page-tulisan .section { background:linear-gradient(180deg,#f5f7f6,#eef3f0); }
+.page-tulisan .story-tools { padding:14px; border:1px solid #d9e5e0; border-radius:18px; background:rgba(255,255,255,.76); box-shadow:0 8px 26px -22px rgba(25,65,58,.4); }
+.page-tulisan .story-tools input,.page-tulisan .story-tools select { border-color:#d4e1dc; background:#fff; }
+.page-tulisan .story-card { border-color:#dce8e3; border-radius:18px; box-shadow:0 8px 24px -19px rgba(25,65,58,.38); transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease; }
+.page-tulisan .story-card:hover { transform:translateY(-4px); border-color:#9ac9bb; box-shadow:0 18px 34px -22px rgba(20,90,78,.42); }
+.page-tulisan .story-card__meta { display:inline-flex; align-self:flex-start; padding:6px 10px; border-radius:999px; background:#e3f1eb; color:#17685d; font-size:11px; letter-spacing:.045em; }
+.page-tulisan .story-card h2 { color:#213c36; }
+.page-tulisan .story-card__foot .btn { min-height:40px; padding-inline:14px; }
+.page-tulisan .section__head { margin-bottom:22px; }
+.page-cv .page-hero { padding:76px 0 52px; background:linear-gradient(120deg,#efe1c6 0%,#f8f3e9 58%,#e5ebd9 100%); }
+.page-cv .page-hero h1 { color:#3a2d1d; }
+.page-cv .cv-role { display:inline-flex; padding:7px 13px; border-radius:999px; background:#f0e4cc; color:#80502a; }
+.page-cv .cv-layout { align-items:start; }
+.page-cv .cv-block { border-color:#e9deca; border-radius:16px; background:rgba(255,253,248,.94); box-shadow:0 12px 30px -22px rgba(78,55,24,.35); }
+.page-cv .cv-block h2 { color:#49351f; font-family:var(--serif); font-size:clamp(25px,3vw,32px); }
+.page-cv .cv-block > .eyebrow { color:#8a5428; }
+.page-cv .cv-layout > aside .cv-block { background:linear-gradient(160deg,#f3ead8,#fffdf8 68%); }
+.page-cv .cv-timeline { border-left-color:#ddcba9; }
+.page-cv .cv-timeline article::before { background:#a66b39; box-shadow:0 0 0 5px #f3e8cf; }
+.page-cv .cv-timeline article { padding:0 0 3px 4px; }
+.page-cv .cv-timeline small { display:inline-block; margin-bottom:6px; color:#8a5428; font-weight:800; letter-spacing:.04em; }
+.page-cv .cv-timeline h3 { color:#3e3325; }
+.page-cv .cv-list li::marker { color:#a66b39; }
+@media(max-width:700px) {
+ .page-tulisan .page-hero,.page-cv .page-hero { padding:58px 0 42px; }
+ .page-tulisan .story-tools { padding:10px; }
+ .page-tulisan .story-tools select { min-width:calc(50% - 6px); flex:1; }
+ .page-cv .cv-block { padding:21px; }
+}
+@media print { .page-cv { --bg:#fff; --surface:#fffdf8; --ink:#222; --ink-2:#444; } .page-cv .page-hero { background:none; } }
