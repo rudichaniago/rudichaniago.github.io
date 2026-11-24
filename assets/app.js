@@ -324,7 +324,7 @@ function categoryOf(text, topics) {
 
 function normalize(list) {
   return list
-    .filter((r) => !CONFIG.exclude.includes(r.name) && !CONFIG.reviewLocked.includes(r.name) && !r.fork)
+    .filter((r) => !CONFIG.exclude.includes(r.name) && !r.fork)
     .map((r) => {
       const o = CONFIG.overrides[r.name] || {};
       const title = o.title || r.title || prettify(r.label || r.name);
@@ -335,6 +335,7 @@ function normalize(list) {
       const updated = r.pushed_at || r.created_at || new Date().toISOString();
       return {
         id: r.name,
+        locked: CONFIG.reviewLocked.includes(r.name),
         title, desc, topics,
         kategori: o.kategori || r.kategori || categoryOf(`${title} ${desc}`, topics),
         mapel: o.mapel || r.mapel || "",
@@ -356,7 +357,7 @@ function normalize(list) {
 // Kelompok seri (minimal 2 karya), diurutkan menurut <meta name="urutan">.
 function seriesGroups() {
   const g = {};
-  state.items.filter((i) => i.seri).forEach((i) => (g[i.seri] = g[i.seri] || []).push(i));
+  state.items.filter((i) => i.seri && !i.locked).forEach((i) => (g[i.seri] = g[i.seri] || []).push(i));
   return Object.entries(g)
     .filter(([, list]) => list.length > 1)
     .map(([name, list]) => [name, list.sort((a, b) => (a.urutan || 99) - (b.urutan || 99) || a.title.localeCompare(b.title, "id"))]);
@@ -445,20 +446,25 @@ function thumbHTML(i, withVideo) {
 function card(i, idx) {
   const isLab = i.kategori === "Lab Maya";
   const openLabel = i.live ? (isLab ? "Buka Lab ↗" : i.kategori === "Alat Guru" ? "Buka Aplikasi ↗" : "Buka Karya ↗") : "Lihat Kode ↗";
-  const openBtn = i.live || CONFIG.showSource
-    ? `<a class="btn btn--primary" href="${esc(i.live || i.code)}" target="_blank" rel="noopener">${openLabel}</a>`
-    : `<span class="btn btn--primary is-disabled" aria-disabled="true">Segera tersedia</span>`;
-  const flag = i.featured ? `<span class="badge badge--star">★ Unggulan</span>` : i.isNew ? `<span class="badge badge--new">Baru</span>` : "";
+  const openBtn = i.locked
+    ? `<span class="btn btn--primary is-disabled" aria-disabled="true">🔒 Dalam review</span>`
+    : i.live || CONFIG.showSource
+      ? `<a class="btn btn--primary" href="${esc(i.live || i.code)}" target="_blank" rel="noopener">${openLabel}</a>`
+      : `<span class="btn btn--primary is-disabled" aria-disabled="true">Segera tersedia</span>`;
+  const copyBtn = i.locked
+    ? `<button class="icon-btn is-disabled" type="button" disabled aria-label="Tautan dikunci selama review" title="Tautan dikunci selama review">${ICON.copy}</button>`
+    : i.live ? `<button class="icon-btn" type="button" data-copy="${esc(i.live)}" aria-label="Salin tautan ${esc(i.title)}" title="Salin tautan">${ICON.copy}</button>` : "";
+  const flag = i.locked ? `<span class="badge badge--locked">🔒 Dalam review</span>` : i.featured ? `<span class="badge badge--star">★ Unggulan</span>` : i.isNew ? `<span class="badge badge--new">Baru</span>` : "";
+  const thumb = i.locked
+    ? `<div class="thumb thumb--locked" role="img" aria-label="Pratinjau ${esc(i.title)}">${thumbHTML(i, false)}<span class="thumb__hint">🔒 Dalam review</span></div>`
+    : `<button class="thumb" type="button" data-open="${idx}" aria-label="Lihat demo ${esc(i.title)}">${thumbHTML(i, true)}<span class="thumb__hint">${i.video ? "▶ Lihat demo" : "⤢ Pratinjau"}</span></button>`;
   return `
-  <article class="card reveal" data-idx="${idx}">
-    <button class="thumb" type="button" data-open="${idx}" aria-label="Lihat demo ${esc(i.title)}">
-      ${thumbHTML(i, true)}
-      <span class="thumb__hint">${i.video ? "▶ Lihat demo" : "⤢ Pratinjau"}</span>
-    </button>
+  <article class="card reveal${i.locked ? " card--locked" : ""}" data-idx="${idx}">
+    ${thumb}
     <span class="badge badge--kat" data-k="${esc(i.kategori)}">${esc(i.kategori)}</span>
     ${flag}
     <div class="card__body">
-      ${i.seri ? `<p class="card__seri">${esc(seriLabel(i))}</p>` : ""}
+      ${i.seri && !i.locked ? `<p class="card__seri">${esc(seriLabel(i))}</p>` : ""}
       <p class="card__meta">
         ${i.mapel ? `<span class="mapel">${esc(i.mapel)}</span>` : ""}
         ${i.kelas ? `<span>${esc(i.kelas)}</span>` : ""}
@@ -469,8 +475,8 @@ function card(i, idx) {
       ${i.topics.length ? `<div class="tags">${i.topics.slice(0, 5).map((t) => `<span>#${esc(t)}</span>`).join("")}</div>` : ""}
       <div class="card__act">
         ${openBtn}
-        ${i.live ? `<button class="icon-btn" type="button" data-copy="${esc(i.live)}" aria-label="Salin tautan ${esc(i.title)}" title="Salin tautan">${ICON.copy}</button>` : ""}
-        ${CONFIG.showSource ? `<a class="icon-btn" href="${esc(i.code)}" target="_blank" rel="noopener" aria-label="Kode sumber ${esc(i.title)}" title="Kode sumber">${ICON.gh}</a>` : ""}
+        ${copyBtn}
+        ${!i.locked && CONFIG.showSource ? `<a class="icon-btn" href="${esc(i.code)}" target="_blank" rel="noopener" aria-label="Kode sumber ${esc(i.title)}" title="Kode sumber">${ICON.gh}</a>` : ""}
       </div>
     </div>
   </article>`;
@@ -525,8 +531,9 @@ function render(raw) {
    ================================================================ */
 const reel = { list: [], i: 0, timer: null, start: 0, dur: 6000 };
 function reelItems() {
-  const withImg = state.items.filter((i) => i.image || i.video);
-  const src = withImg.length ? withImg : state.items;
+  const available = state.items.filter((i) => !i.locked);
+  const withImg = available.filter((i) => i.image || i.video);
+  const src = withImg.length ? withImg : available;
   return [...src].sort((a, b) => (b.featured - a.featured) || b.updated.localeCompare(a.updated)).slice(0, 8);
 }
 function renderReel() {
@@ -595,7 +602,7 @@ function reelProgress(t) {
    ================================================================ */
 const th = { i: 0, timer: null };
 function renderTheater() {
-  const list = [...state.items].sort((a, b) => (b.featured - a.featured) || b.updated.localeCompare(a.updated));
+  const list = state.items.filter((i) => !i.locked).sort((a, b) => (b.featured - a.featured) || b.updated.localeCompare(a.updated));
   th.list = list;
   $("#playlist").innerHTML = list.map((i, n) => `
     <li><button type="button" data-n="${n}">
@@ -642,11 +649,11 @@ function showItem(tab = modal.tab) {
   $("#mMeta").textContent = [seriLabel(i), i.kategori, i.mapel, i.kelas].filter(Boolean).join(" · ");
   $("#mJudul").textContent = i.title;
   $("#mDesk").textContent = i.desc || "";
-  const url = i.live || (CONFIG.showSource ? i.code : "");
+  const url = i.locked ? "" : i.live || (CONFIG.showSource ? i.code : "");
   $("#mOpen").hidden = !url;
   $("#mCopy").hidden = !url;
   $("#mOpen").href = url || "#";
-  $("#mOpen").textContent = i.live ? "Buka di tab baru ↗" : "Lihat kode ↗";
+  $("#mOpen").textContent = i.locked ? "🔒 Dalam review" : i.live ? "Buka di tab baru ↗" : "Lihat kode ↗";
   $("#mCopy").dataset.url = url;
   $("#mUrl").textContent = url ? url.replace(/%20/g, " ") : "Tautan segera tersedia";
   $("#mPreview").innerHTML = i.video
@@ -795,7 +802,7 @@ function bind() {
 
   // Hero
   $("#btnAcak").addEventListener("click", () => {
-    const pool = state.items.filter((i) => i.live);
+    const pool = state.items.filter((i) => i.live && !i.locked);
     if (!pool.length) return toast("Belum ada karya yang bisa dibuka.");
     openModal(pool, Math.floor(Math.random() * pool.length), "live");
   });
