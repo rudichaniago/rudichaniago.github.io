@@ -15,8 +15,9 @@ Landing page media pembelajaran interaktif karya Rudi Nofindra, tayang di **http
 - Buka `kelola-karya.html` dan tekan **Gembok** pada karya yang sedang ditinjau. Tombol **Buka kunci** menghapus pilihan dari daftar lokal.
 - Pilihan tersimpan di browser ini. Tekan **Salin daftar** untuk menghasilkan nilai `reviewLocked`, lalu terapkan pada `assets/app.js` dan publikasikan agar karya tersembunyi bagi pengunjung situs.
 - ID file dalam repositori `karya` berbentuk `karya/nama-file.html`; repositori yang tampil sebagai satu karya memakai nama repositorinya.
-- Karya terkunci tidak tampil di galeri, pratinjau, atau statistik.
-- Pengaturan ini menyembunyikan karya dari situs portofolio, tetapi tidak mengubah akses repositori sumber atau URL GitHub Pages langsung.
+- Karya terkunci tetap tampil di galeri dengan thumbnail dan deskripsi serta tanda **Dalam review**.
+- Tombol untuk membuka karya dan menyalin tautannya dinonaktifkan; karya juga tidak dimasukkan ke pratinjau otomatis.
+- Pengaturan ini membatasi tautan di portofolio, tetapi tidak mengubah akses repositori sumber atau URL GitHub Pages langsung.
 
 ## Menambah karya baru
 Unggah ke repositori `karya`, **atau** buat repositori baru dengan GitHub Pages aktif (tanpa `index.html`): setiap file `.html` di dalamnya otomatis tampil sebagai kartu. Repositori yang memakai `index.html` atau kolom *Website* tampil sebagai satu kartu situs.

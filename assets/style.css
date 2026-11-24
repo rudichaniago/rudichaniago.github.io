@@ -590,3 +590,10 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
 .work-manager-output pre { max-height:220px; overflow:auto; padding:14px; border-radius:10px; background:rgba(0,0,0,.22); color:inherit; white-space:pre-wrap; overflow-wrap:anywhere; }
 .work-manager-output .btn { margin-right:8px; }
 @media(max-width:650px) { .work-manager-row { align-items:flex-start; flex-direction:column; } .work-manager-status { width:100%; justify-content:space-between; } }
+
+/* Karya yang dikunci tetap tampil, tetapi tidak membuka pratinjau atau tautan */
+.card--locked .thumb--locked { cursor:default; }
+.card--locked .thumb--locked .thumb__hint { opacity:1; transform:none; background:rgba(86,48,38,.9); }
+.badge--locked { right:12px; background:#f2d7cb; color:#713d2b; }
+:root[data-theme="dark"] .badge--locked { background:#68463a; color:#ffe4d6; }
+.card--locked .card__act .is-disabled { opacity:.62; cursor:not-allowed; pointer-events:none; }
