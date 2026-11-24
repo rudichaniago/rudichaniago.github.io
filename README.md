@@ -56,9 +56,9 @@ assets/vendor/qrcode.js QR Code offline (MIT, Kazuhiko Arase)
 Settings → Pages → *Deploy from a branch* → `main` / `(root)`.
 
 ## Tulisan & CV Digital
-- `data/tulisan.json` memuat 59 tulisan terverifikasi dari Kumparan, Kompasiana, Minang Connect, jurnal, dan prosiding.
+- `data/tulisan.json` memuat 61 publikasi terverifikasi dari Kumparan, Kompasiana, Minang Connect, Medium, jurnal, prosiding, dan YouTube.
 - `data/cv.json` memuat pendidikan, pengalaman, organisasi, kontribusi, penghargaan, dan publikasi berdasarkan CV pembaruan September 2026.
 - `tulisan.html` menampilkan arsip publikasi dari `data/tulisan.json`.
-- Arsip saat ini berisi 59 tulisan, termasuk publikasi ilmiah dari jurnal dan prosiding.
+- Arsip saat ini berisi 61 publikasi, termasuk artikel, jurnal, prosiding, dan video.
 - `kelola.html` adalah editor draf lokal; draf tersimpan di browser perangkat ini, bukan terkirim ke situs.
 - `cv.html` mengambil isi dari `data/cv.json`; kontak pribadi sensitif dari PDF tidak ditampilkan.
