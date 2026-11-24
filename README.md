@@ -10,6 +10,14 @@ Landing page media pembelajaran interaktif karya Rudi Nofindra, tayang di **http
 - **Cara Pakai** dan **Profil Penyusun**.
 - Sinkron dengan GitHub saat dibuka dan tiap 5 menit; mode terang/gelap; responsif; menghormati *reduced motion*.
 
+## Mengunci karya yang sedang ditinjau
+
+- Di `assets/app.js`, tambahkan ID karya ke daftar `CONFIG.reviewLocked` agar karya tidak tampil di galeri publik, pratinjau, atau statistik.
+- Untuk file dalam repositori `karya`, gunakan ID seperti `karya/nama-file.html`. Untuk repositori yang tampil sebagai satu karya, gunakan nama repositorinya.
+- Membuka kembali karya: hapus ID tersebut dari daftar `reviewLocked`.
+- Contoh: `reviewLocked: ["karya/nama-media.html"]`.
+- Pengaturan ini menyembunyikan kartu di situs portofolio, tetapi tidak mengubah akses repositori sumber atau URL GitHub Pages langsung.
+
 ## Menambah karya baru
 Unggah ke repositori `karya`, **atau** buat repositori baru dengan GitHub Pages aktif (tanpa `index.html`): setiap file `.html` di dalamnya otomatis tampil sebagai kartu. Repositori yang memakai `index.html` atau kolom *Website* tampil sebagai satu kartu situs.
 
