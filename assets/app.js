@@ -8,7 +8,12 @@ const CONFIG = {
   // Kunci karya yang sedang ditinjau agar tidak tampil di galeri publik.
   // Isi dengan ID persis (nama repositori atau "karya/nama-file.html"). Kosongkan kembali untuk membuka.
   // Contoh: reviewLocked: ["karya/nama-media.html"]
-  reviewLocked: [],
+  reviewLocked: [
+    "karya/Media_Pembelajaran_Kamera.html",
+    "karya/Teknik Penyutradaraan.html",
+    "karya/Virtual Camera Lab.html",
+    "karya/lab-maya-simuset-studio.html"
+  ],
   // Karya unggulan (tampil paling depan & bertanda ★). Contoh: "karya/lab-maya-simuset-studio.html"
   featured: ["karya/lab-maya-simuset-studio.html", "karya/Mengenal Ka Ga Nga.html"],
   // Topik fokus: selalu dicantumkan lebih dulu di filter topik.
