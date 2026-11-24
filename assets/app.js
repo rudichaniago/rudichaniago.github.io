@@ -5,6 +5,10 @@ const CONFIG = {
   username: "rudichaniago",
   // Repositori yang tidak ingin ditampilkan
   exclude: ["desktop-tutorial", "bahanajardigital.github.io", "rudichaniago.github.io"],
+  // Kunci karya yang sedang ditinjau agar tidak tampil di galeri publik.
+  // Isi dengan ID persis (nama repositori atau "karya/nama-file.html"). Kosongkan kembali untuk membuka.
+  // Contoh: reviewLocked: ["karya/nama-media.html"]
+  reviewLocked: [],
   // Karya unggulan (tampil paling depan & bertanda ★). Contoh: "karya/lab-maya-simuset-studio.html"
   featured: ["karya/lab-maya-simuset-studio.html", "karya/Mengenal Ka Ga Nga.html"],
   // Topik fokus: selalu dicantumkan lebih dulu di filter topik.
@@ -315,7 +319,7 @@ function categoryOf(text, topics) {
 
 function normalize(list) {
   return list
-    .filter((r) => !CONFIG.exclude.includes(r.name) && !r.fork)
+    .filter((r) => !CONFIG.exclude.includes(r.name) && !CONFIG.reviewLocked.includes(r.name) && !r.fork)
     .map((r) => {
       const o = CONFIG.overrides[r.name] || {};
       const title = o.title || r.title || prettify(r.label || r.name);
